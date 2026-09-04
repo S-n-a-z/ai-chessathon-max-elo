@@ -8,10 +8,16 @@ search, and a tapered handcrafted evaluation. It does not call or contain a thir
 from __future__ import annotations
 
 import time
-from collections.abc import Hashable
+from collections.abc import Callable, Hashable
 from typing import NamedTuple
 
 import chess
+
+_fast_choose_move: Callable[[str, int], str] | None
+try:
+    from fast_engine import choose_move as _fast_choose_move
+except Exception:  # Keep a legal classical fallback if JIT initialization ever fails.
+    _fast_choose_move = None
 
 INF = 40_000
 MATE = 32_000
@@ -492,7 +498,7 @@ def _time_limits(time_left_ms: int) -> tuple[float, float]:
     return soft, max(soft, hard)
 
 
-def get_move(fen: str, time_left_ms: int) -> str:
+def _classic_get_move(fen: str, time_left_ms: int) -> str:
     """Return the best move found before a conservative wall-clock deadline."""
     global _generation, _hard_deadline, _nodes
     board = chess.Board(fen)
@@ -549,3 +555,10 @@ def get_move(fen: str, time_left_ms: int) -> str:
             break
 
     return best_move.uci()
+
+
+def get_move(fen: str, time_left_ms: int) -> str:
+    """Use the compiled engine, retaining the proven Python engine as an import fallback."""
+    if _fast_choose_move is not None:
+        return _fast_choose_move(fen, time_left_ms)
+    return _classic_get_move(fen, time_left_ms)

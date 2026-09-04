@@ -6,20 +6,30 @@ An original, self-contained chess engine built for the
 - iterative deepening with aspiration windows;
 - principal-variation alpha-beta search;
 - quiescence search for tactically stable leaf positions;
-- transposition-table, killer-move, history, MVV-LVA, and checking-move ordering;
+- transposition-table, killer-move, history, and MVV-LVA move ordering;
 - null-move pruning, razoring, reverse futility pruning, and late-move reductions;
 - a tapered middlegame/endgame evaluation covering material, mobility, pawn structure,
   passed pawns, bishop pair, rook files, king safety, and tempo; and
-- clock-aware hard deadlines with a legal fallback move.
+- clock-aware hard deadlines with a legal fallback move; and
+- cancellable opponent-time pondering, which the competition rules explicitly permit.
 
-The engine is classical and all submitted engine code is in `agent.py`. It does not bundle,
-invoke, port, or translate Stockfish or another third-party engine. The target is the strongest
-legal entry we can iteratively measure, not a claim of Stockfish-equivalent playing strength.
+`fast_engine.py` contains an original 0x88 board, legal move generator, evaluation, and recursive
+search compiled by Numba. `agent.py` provides the required entry point and retains a readable
+pure-Python fallback. The submission does not bundle, invoke, port, or translate Stockfish or
+another third-party engine. The target is the strongest legal entry we can iteratively measure,
+not a claim of Stockfish-equivalent playing strength.
 
-The repository includes the official starter's local harness and baselines. An eight-game smoke
-arena scored 7 wins and 1 draw against the supplied two-ply minimax baseline at 2.5 s + 0.1 s,
-with no crashes, illegal moves, or flags. That is a basic gate rather than a statistically
-meaningful rating estimate.
+The compiled search visits roughly fifteen times as many nodes per move as the initial
+python-chess search in local fixed-time measurements. In a four-game A/B check at 5 s + 0.1 s,
+the final pondering build scored +3 =1 -0 against the otherwise identical non-pondering build.
+Earlier smoke tests scored +2 =0 -0 against the supplied minimax baseline and +2 =0 -0 against
+the previous pure-Python engine. A separate four-game spot check against Stockfish's 1800-Elo
+limited mode scored +2 =0 -2. These are regression checks, not statistically meaningful
+rating estimates or evidence of Stockfish-equivalent strength.
+
+A small evaluator trained from 30,000 locally generated Stockfish-labelled positions was also
+tested. It lost both direct A/B games against the handcrafted evaluator, so its weights were
+removed from the submission. Only measured improvements are kept.
 
 ## Quick start
 
@@ -31,7 +41,7 @@ make play
 ```
 
 That plays the engine against a baseline over a full 120 s + 0.5 s game and prints the result.
-Run `make zip` to create `submission.zip` with `agent.py` at its root.
+Run `make zip` to create `submission.zip` with `agent.py` and `fast_engine.py` at its root.
 
 ## Writing an agent
 
@@ -76,7 +86,8 @@ evaluation worth searching with.
 ## What's here
 
 ```
-agent.py             your submission
+agent.py             required entry point and pure-Python safety fallback
+fast_engine.py       original compiled move generator, evaluation, search, and pondering
 baselines/           random, greedy, minimax, numba; each is a directory with an agent.py
 harness/runner.py    the process the platform runs your agent in
 harness/referee.py   the clock, legality, draw and adjudication rules
@@ -86,6 +97,8 @@ harness/play.py      one game between two agent directories
 harness/arena.py     many games, with a score
 harness/package.py   builds submission.zip with agent.py at the root
 docs/IDEAS.md        where the strength actually comes from
+tools/               reproducible benchmarking and evaluator-training utilities
+tests/               legality, perft, clock, mate, and protocol regression tests
 ```
 
 Local games start from the normal position unless you pass `--fen`. Rated games start from
