@@ -9,9 +9,10 @@ An original, self-contained chess engine built for the
 - transposition-table, killer-move, history, and MVV-LVA move ordering;
 - null-move pruning, razoring, reverse futility pruning, and late-move reductions;
 - a tapered middlegame/endgame evaluation covering material, mobility, pawn structure,
-  passed pawns, bishop pair, rook files, king safety, and tempo; and
-- clock-aware hard deadlines with a legal fallback move; and
-- cancellable opponent-time pondering, which the competition rules explicitly permit.
+  passed pawns, bishop pair, rook files, king safety, and tempo;
+- clock-aware hard deadlines with a legal fallback move;
+- a 4,694-position, Stockfish-labelled opening book restricted to genuine opening positions;
+- complete three- and four-piece Syzygy WDL/DTZ tablebases for perfect covered endings.
 
 `fast_engine.py` contains an original 0x88 board, legal move generator, evaluation, and recursive
 search compiled by Numba. `agent.py` provides the required entry point and retains a readable
@@ -20,16 +21,21 @@ another third-party engine. The target is the strongest legal entry we can itera
 not a claim of Stockfish-equivalent playing strength.
 
 The compiled search visits roughly fifteen times as many nodes per move as the initial
-python-chess search in local fixed-time measurements. In a four-game A/B check at 5 s + 0.1 s,
-the final pondering build scored +3 =1 -0 against the otherwise identical non-pondering build.
-Earlier smoke tests scored +2 =0 -0 against the supplied minimax baseline and +2 =0 -0 against
-the previous pure-Python engine. A separate four-game spot check against Stockfish's 1800-Elo
-limited mode scored +2 =0 -2. These are regression checks, not statistically meaningful
-rating estimates or evidence of Stockfish-equivalent strength.
+python-chess search in local fixed-time measurements. Smoke tests scored +2 =0 -0 against the
+supplied minimax baseline and +2 =0 -0 against the previous pure-Python engine. In the latest
+eight-game spot check against Stockfish 18's 2200-Elo limited mode, played games scored +2 =1 -4;
+the remaining game ended when Stockfish flagged. The agent completed every game without a flag,
+illegal move, or crash. These are regression checks, not statistically meaningful rating
+estimates or evidence of Stockfish-equivalent strength.
 
 A small evaluator trained from 30,000 locally generated Stockfish-labelled positions was also
 tested. It lost both direct A/B games against the handcrafted evaluator, so its weights were
 removed from the submission. Only measured improvements are kept.
+
+The opening book and endgame tables are data types expressly permitted by the competition. The
+book positions come from the CC0 Lichess opening dataset and were labelled offline; the submitted
+agent neither includes nor invokes Stockfish. Normal middlegame decisions still come entirely
+from the original search and evaluation in this repository.
 
 ## Quick start
 
@@ -41,11 +47,12 @@ make play
 ```
 
 That plays the engine against a baseline over a full 120 s + 0.5 s game and prints the result.
-Run `make zip` to create `submission.zip` with `agent.py` and `fast_engine.py` at its root.
+Run `make zip` to create `submission.zip` with the Python runtime modules at its root and the
+permitted knowledge data under `weights/`.
 
 ## Writing an agent
 
-`agent.py` is the whole submission. One function:
+`agent.py` exposes the required interface. One function:
 
 ```python
 def get_move(fen: str, time_left_ms: int) -> str:
@@ -87,7 +94,9 @@ evaluation worth searching with.
 
 ```
 agent.py             required entry point and pure-Python safety fallback
-fast_engine.py       original compiled move generator, evaluation, search, and pondering
+fast_engine.py       original compiled move generator, evaluation, and search
+opening.py           legal lookup for the shallow opening book
+endgame.py           WDL/DTZ-optimal play in covered Syzygy endings
 baselines/           random, greedy, minimax, numba; each is a directory with an agent.py
 harness/runner.py    the process the platform runs your agent in
 harness/referee.py   the clock, legality, draw and adjudication rules
@@ -99,6 +108,7 @@ harness/package.py   builds submission.zip with agent.py at the root
 docs/IDEAS.md        where the strength actually comes from
 tools/               reproducible benchmarking and evaluator-training utilities
 tests/               legality, perft, clock, mate, and protocol regression tests
+weights/             opening-book data and three/four-piece Syzygy tables
 ```
 
 Local games start from the normal position unless you pass `--fen`. Rated games start from

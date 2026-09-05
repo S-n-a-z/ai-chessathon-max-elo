@@ -13,6 +13,9 @@ from typing import NamedTuple
 
 import chess
 
+from endgame import choose_tablebase_move
+from opening import choose_opening_move
+
 _fast_choose_move: Callable[[str, int], str] | None
 try:
     from fast_engine import choose_move as _fast_choose_move
@@ -559,6 +562,12 @@ def _classic_get_move(fen: str, time_left_ms: int) -> str:
 
 def get_move(fen: str, time_left_ms: int) -> str:
     """Use the compiled engine, retaining the proven Python engine as an import fallback."""
+    tablebase_move = choose_tablebase_move(fen)
+    if tablebase_move is not None:
+        return tablebase_move
+    opening_move = choose_opening_move(fen)
+    if opening_move is not None:
+        return opening_move
     if _fast_choose_move is not None:
         return _fast_choose_move(fen, time_left_ms)
     return _classic_get_move(fen, time_left_ms)

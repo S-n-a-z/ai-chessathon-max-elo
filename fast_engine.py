@@ -8,7 +8,6 @@ No third-party engine code, network, subprocess, or external data is used at run
 
 from __future__ import annotations
 
-import threading
 import time
 
 import chess
@@ -131,10 +130,8 @@ _killers = np.zeros((MAX_PLY, 2), dtype=np.int32)
 _move_buffer = np.zeros((MAX_PLY, MAX_MOVES), dtype=np.int32)
 _score_buffer = np.zeros((MAX_PLY, MAX_MOVES), dtype=np.int32)
 _hash_stack = np.zeros(MAX_PLY, dtype=np.uint64)
-_nodes = np.zeros(3, dtype=np.int64)
+_nodes = np.zeros(2, dtype=np.int64)
 _generation = 1
-_ponder_thread: threading.Thread | None = None
-_ponder_stop = threading.Event()
 
 
 @njit(cache=False, inline="always")
@@ -170,12 +167,12 @@ def _piece_index(piece: int) -> int:
 @njit(cache=False)
 def _position_hash(board: np.ndarray, side: int, castling: int, ep_square: int) -> np.uint64:
     key = np.uint64(0)
-    for square in range(128):
-        if square & 0x88:
-            continue
-        piece = int(board[square])
-        if piece:
-            key ^= Z_PIECES[_piece_index(piece), square]
+    for rank_index in range(8):
+        for file_index in range(8):
+            square = rank_index * 16 + file_index
+            piece = int(board[square])
+            if piece:
+                key ^= Z_PIECES[_piece_index(piece), square]
     if side == BLACK:
         key ^= Z_SIDE
     key ^= Z_CASTLES[castling]
@@ -514,31 +511,36 @@ def _evaluate(board: np.ndarray, side: int, white_king: int, black_king: int) ->
     phase = 0
     white_bishops = 0
     black_bishops = 0
+    white_pawn_files = np.zeros(8, dtype=np.int8)
+    black_pawn_files = np.zeros(8, dtype=np.int8)
 
-    for square in range(128):
-        if square & 0x88:
-            continue
-        piece = int(board[square])
-        if not piece:
-            continue
-        color = WHITE if piece > 0 else BLACK
-        piece_type = abs(piece)
-        rank_index = square >> 4
-        file_index = square & 7
-        relative = square if color == WHITE else (7 - rank_index) * 16 + file_index
-        mg += color * (int(MG_VALUE[piece_type]) + int(PST_MG[piece_type, relative]))
-        eg += color * (int(EG_VALUE[piece_type]) + int(PST_EG[piece_type, relative]))
-        phase += int(PHASE_VALUE[piece_type])
+    for rank_index in range(8):
+        for file_index in range(8):
+            square = rank_index * 16 + file_index
+            piece = int(board[square])
+            if not piece:
+                continue
+            color = WHITE if piece > 0 else BLACK
+            piece_type = abs(piece)
+            relative = square if color == WHITE else (7 - rank_index) * 16 + file_index
+            mg += color * (int(MG_VALUE[piece_type]) + int(PST_MG[piece_type, relative]))
+            eg += color * (int(EG_VALUE[piece_type]) + int(PST_EG[piece_type, relative]))
+            phase += int(PHASE_VALUE[piece_type])
 
-        if piece_type == BISHOP:
-            if color == WHITE:
-                white_bishops += 1
-            else:
-                black_bishops += 1
-        if piece_type in (KNIGHT, BISHOP, ROOK, QUEEN):
-            mobility = _mobility(board, square, color, piece_type)
-            mg += color * int(MOBILITY_MG[piece_type]) * mobility
-            eg += color * int(MOBILITY_EG[piece_type]) * mobility
+            if piece_type == BISHOP:
+                if color == WHITE:
+                    white_bishops += 1
+                else:
+                    black_bishops += 1
+            elif piece_type == PAWN:
+                if color == WHITE:
+                    white_pawn_files[file_index] += 1
+                else:
+                    black_pawn_files[file_index] += 1
+            if piece_type in (KNIGHT, BISHOP, ROOK, QUEEN):
+                mobility = _mobility(board, square, color, piece_type)
+                mg += color * int(MOBILITY_MG[piece_type]) * mobility
+                eg += color * int(MOBILITY_EG[piece_type]) * mobility
 
     if white_bishops >= 2:
         mg += 31
@@ -548,79 +550,73 @@ def _evaluate(board: np.ndarray, side: int, white_king: int, black_king: int) ->
         eg -= 42
 
     for color in (WHITE, BLACK):
+        pawn_files = white_pawn_files if color == WHITE else black_pawn_files
         for file_index in range(8):
-            pawn_count = 0
-            for rank_index in range(8):
-                if board[rank_index * 16 + file_index] == color * PAWN:
-                    pawn_count += 1
+            pawn_count = int(pawn_files[file_index])
             if pawn_count > 1:
                 mg -= color * 13 * (pawn_count - 1)
                 eg -= color * 19 * (pawn_count - 1)
 
-        for square in range(128):
-            if square & 0x88 or board[square] != color * PAWN:
-                continue
-            file_index = square & 7
-            rank_index = square >> 4
-            relative_rank = rank_index if color == WHITE else 7 - rank_index
-            isolated = True
-            for nearby_file in range(max(0, file_index - 1), min(7, file_index + 1) + 1):
-                if nearby_file == file_index:
+        for rank_index in range(8):
+            for file_index in range(8):
+                square = rank_index * 16 + file_index
+                if board[square] != color * PAWN:
                     continue
-                for scan_rank in range(8):
-                    if board[scan_rank * 16 + nearby_file] == color * PAWN:
-                        isolated = False
-                        break
-                if not isolated:
-                    break
-            if isolated:
-                mg -= color * 11
-                eg -= color * 9
+                relative_rank = rank_index if color == WHITE else 7 - rank_index
+                isolated = (file_index == 0 or pawn_files[file_index - 1] == 0) and (
+                    file_index == 7 or pawn_files[file_index + 1] == 0
+                )
+                if isolated:
+                    mg -= color * 11
+                    eg -= color * 9
 
-            passed = True
-            first_rank = rank_index + 1 if color == WHITE else rank_index - 1
-            last_rank = 8 if color == WHITE else -1
-            rank_step = 1 if color == WHITE else -1
-            scan_rank = first_rank
-            while scan_rank != last_rank and passed:
-                for nearby_file in range(max(0, file_index - 1), min(7, file_index + 1) + 1):
-                    if board[scan_rank * 16 + nearby_file] == -color * PAWN:
-                        passed = False
-                        break
-                scan_rank += rank_step
-            if passed:
-                mg += color * int(PASSED_MG[relative_rank])
-                eg += color * int(PASSED_EG[relative_rank])
+                passed = True
+                first_rank = rank_index + 1 if color == WHITE else rank_index - 1
+                last_rank = 8 if color == WHITE else -1
+                rank_step = 1 if color == WHITE else -1
+                scan_rank = first_rank
+                while scan_rank != last_rank and passed:
+                    for nearby_file in range(
+                        max(0, file_index - 1), min(7, file_index + 1) + 1
+                    ):
+                        if board[scan_rank * 16 + nearby_file] == -color * PAWN:
+                            passed = False
+                            break
+                    scan_rank += rank_step
+                if passed:
+                    mg += color * int(PASSED_MG[relative_rank])
+                    eg += color * int(PASSED_EG[relative_rank])
 
-            support_rank = rank_index - 1 if color == WHITE else rank_index + 1
-            if 0 <= support_rank < 8:
-                supported = False
-                if file_index > 0 and board[support_rank * 16 + file_index - 1] == color * PAWN:
-                    supported = True
-                if file_index < 7 and board[support_rank * 16 + file_index + 1] == color * PAWN:
-                    supported = True
-                if supported:
-                    mg += color * 7
-                    eg += color * 10
+                support_rank = rank_index - 1 if color == WHITE else rank_index + 1
+                if 0 <= support_rank < 8:
+                    supported = False
+                    if (
+                        file_index > 0
+                        and board[support_rank * 16 + file_index - 1] == color * PAWN
+                    ):
+                        supported = True
+                    if (
+                        file_index < 7
+                        and board[support_rank * 16 + file_index + 1] == color * PAWN
+                    ):
+                        supported = True
+                    if supported:
+                        mg += color * 7
+                        eg += color * 10
 
-        for square in range(128):
-            if square & 0x88 or board[square] != color * ROOK:
-                continue
-            file_index = square & 7
-            friendly_pawn = False
-            any_pawn = False
-            for rank_index in range(8):
-                occupant = int(board[rank_index * 16 + file_index])
-                if abs(occupant) == PAWN:
-                    any_pawn = True
-                    if occupant == color * PAWN:
-                        friendly_pawn = True
-            if not any_pawn:
-                mg += color * 20
-                eg += color * 14
-            elif not friendly_pawn:
-                mg += color * 11
-                eg += color * 7
+        for rank_index in range(8):
+            for file_index in range(8):
+                square = rank_index * 16 + file_index
+                if board[square] != color * ROOK:
+                    continue
+                friendly_pawn = pawn_files[file_index] > 0
+                any_pawn = white_pawn_files[file_index] + black_pawn_files[file_index] > 0
+                if not any_pawn:
+                    mg += color * 20
+                    eg += color * 14
+                elif not friendly_pawn:
+                    mg += color * 11
+                    eg += color * 7
 
         king_square = white_king if color == WHITE else black_king
         king_file = king_square & 7
@@ -649,16 +645,15 @@ def _evaluate(board: np.ndarray, side: int, white_king: int, black_king: int) ->
 @njit(cache=False)
 def _insufficient_material(board: np.ndarray) -> bool:
     minors = 0
-    for square in range(128):
-        if square & 0x88:
-            continue
-        piece_type = abs(int(board[square]))
-        if piece_type in (PAWN, ROOK, QUEEN):
-            return False
-        if piece_type in (KNIGHT, BISHOP):
-            minors += 1
-            if minors > 1:
+    for rank_index in range(8):
+        for file_index in range(8):
+            piece_type = abs(int(board[rank_index * 16 + file_index]))
+            if piece_type in (PAWN, ROOK, QUEEN):
                 return False
+            if piece_type in (KNIGHT, BISHOP):
+                minors += 1
+                if minors > 1:
+                    return False
     return True
 
 
@@ -769,13 +764,6 @@ def _quiescence(
     alpha: int,
     beta: int,
     ply: int,
-    generation: int,
-    tt_keys: np.ndarray,
-    tt_scores: np.ndarray,
-    tt_moves: np.ndarray,
-    tt_depths: np.ndarray,
-    tt_bounds: np.ndarray,
-    tt_ages: np.ndarray,
     move_buffer: np.ndarray,
     score_buffer: np.ndarray,
     killers: np.ndarray,
@@ -797,8 +785,9 @@ def _quiescence(
     in_check = _is_attacked(board, king_square, -side)
     white_king = king_square if side == WHITE else opponent_king
     black_king = opponent_king if side == WHITE else king_square
-    stand_pat = _evaluate(board, side, white_king, black_king)
+    stand_pat = -INF
     if not in_check:
+        stand_pat = _evaluate(board, side, white_king, black_king)
         if stand_pat >= beta:
             return stand_pat
         if stand_pat > alpha:
@@ -835,13 +824,6 @@ def _quiescence(
             -beta,
             -alpha,
             ply + 1,
-            generation,
-            tt_keys,
-            tt_scores,
-            tt_moves,
-            tt_depths,
-            tt_bounds,
-            tt_ages,
             move_buffer,
             score_buffer,
             killers,
@@ -887,16 +869,6 @@ def _search(
     hash_stack: np.ndarray,
     nodes: np.ndarray,
 ) -> int:
-    if _out_of_nodes(nodes):
-        return ABORT
-    if ply >= MAX_PLY - 1:
-        white_king = king_square if side == WHITE else opponent_king
-        black_king = opponent_king if side == WHITE else king_square
-        return _evaluate(board, side, white_king, black_king)
-    key = _position_hash(board, side, castling, ep_square)
-    if halfmove >= 100 or _is_repeated(hash_stack, key, ply, halfmove):
-        return 0
-    hash_stack[ply] = key
     if depth <= 0:
         return _quiescence(
             board,
@@ -909,13 +881,6 @@ def _search(
             alpha,
             beta,
             ply,
-            generation,
-            tt_keys,
-            tt_scores,
-            tt_moves,
-            tt_depths,
-            tt_bounds,
-            tt_ages,
             move_buffer,
             score_buffer,
             killers,
@@ -923,7 +888,16 @@ def _search(
             hash_stack,
             nodes,
         )
-
+    if _out_of_nodes(nodes):
+        return ABORT
+    if ply >= MAX_PLY - 1:
+        white_king = king_square if side == WHITE else opponent_king
+        black_king = opponent_king if side == WHITE else king_square
+        return _evaluate(board, side, white_king, black_king)
+    key = _position_hash(board, side, castling, ep_square)
+    if halfmove >= 100 or _is_repeated(hash_stack, key, ply, halfmove):
+        return 0
+    hash_stack[ply] = key
     tt_index = int(key & np.uint64(TT_MASK))
     tt_move = 0
     if tt_ages[tt_index] and tt_keys[tt_index] == key:
@@ -967,13 +941,6 @@ def _search(
             alpha,
             beta,
             ply,
-            generation,
-            tt_keys,
-            tt_scores,
-            tt_moves,
-            tt_depths,
-            tt_bounds,
-            tt_ages,
             move_buffer,
             score_buffer,
             killers,
@@ -1201,7 +1168,7 @@ def _search(
     return best_score
 
 
-@njit(cache=False, nogil=True)
+@njit(cache=False)
 def _root_search(
     board: np.ndarray,
     side: int,
@@ -1231,8 +1198,6 @@ def _root_search(
 ) -> tuple[int, int, int, bool]:
     nodes[0] = 0
     nodes[1] = max(2, node_limit)
-    if nodes[2] != 0:
-        nodes[1] = 0
     key = _position_hash(board, side, castling, ep_square)
     hash_stack[0] = key
     count = _generate_legal(
@@ -1498,93 +1463,15 @@ def _time_limits(time_left_ms: int) -> tuple[float, float]:
     return soft, max(soft, hard)
 
 
-def _stop_pondering() -> None:
-    """Stop the idle-time search before touching its shared search tables."""
-    global _ponder_thread
-    thread = _ponder_thread
-    if thread is None:
-        return
-    _ponder_stop.set()
-    _nodes[2] = 1
-    _nodes[1] = 0
-    thread.join()
-    _ponder_thread = None
-    _nodes[2] = 0
-
-
-def _ponder_position(fen: str, generation: int) -> None:
-    """Deepen the likely reply position while the opponent owns the clock."""
-    try:
-        board = chess.Board(fen)
-        encoded, side, castling, ep_square, halfmove, king_square, opponent_king = (
-            _encode_position(board)
-        )
-        preferred = 0
-        for depth in range(1, 64):
-            if _ponder_stop.is_set():
-                break
-            _, preferred, _, completed = _root_search(
-                encoded,
-                side,
-                castling,
-                ep_square,
-                halfmove,
-                king_square,
-                opponent_king,
-                depth,
-                -INF,
-                INF,
-                preferred,
-                2_000_000_000,
-                generation,
-                _tt_keys,
-                _tt_scores,
-                _tt_moves,
-                _tt_depths,
-                _tt_bounds,
-                _tt_ages,
-                _move_buffer,
-                _score_buffer,
-                _killers,
-                _history,
-                _hash_stack,
-                _nodes,
-            )
-            if not completed:
-                break
-    except Exception:
-        # Pondering is optional strength work; it must never endanger a legal reply.
-        return
-
-
-def _start_pondering(board: chess.Board, generation: int) -> None:
-    global _ponder_thread
-    if board.is_game_over(claim_draw=True):
-        return
-    _ponder_stop.clear()
-    _nodes[2] = 0
-    _ponder_thread = threading.Thread(
-        target=_ponder_position,
-        args=(board.fen(), generation),
-        name="chess-ponder",
-        daemon=True,
-    )
-    _ponder_thread.start()
-
-
 def choose_move(fen: str, time_left_ms: int) -> str:
     """Search a FEN with iterative deepening and a conservative node/time budget."""
     global _generation
-    _stop_pondering()
     board = chess.Board(fen)
     legal = list(board.legal_moves)
     if not legal:
         return "0000"
     if len(legal) == 1:
-        candidate = legal[0]
-        board.push(candidate)
-        _start_pondering(board, _generation)
-        return candidate.uci()
+        return legal[0].uci()
 
     encoded, side, castling, ep_square, halfmove, king_square, opponent_king = _encode_position(
         board
@@ -1676,16 +1563,13 @@ def choose_move(fen: str, time_left_ms: int) -> str:
 
     candidate = _decode_move(best_move) if best_move else legal[0]
     if candidate not in board.legal_moves:
-        candidate = legal[0]
-    board.push(candidate)
-    _start_pondering(board, generation)
+        return legal[0].uci()
     return candidate.uci()
 
 
 def reset_for_test() -> None:
     """Reset game-persistent state when a benchmark reuses one Python process for many games."""
     global _generation
-    _stop_pondering()
     _generation = 1
     _tt_ages.fill(0)
     _history.fill(0)
