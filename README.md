@@ -17,8 +17,7 @@ An original, self-contained chess engine built for the
 `fast_engine.py` contains an original 0x88 board, legal move generator, evaluation, and recursive
 search compiled by Numba. `agent.py` provides the required entry point and retains a readable
 pure-Python fallback. The submission does not bundle, invoke, port, or translate Stockfish or
-another third-party engine. The target is the strongest legal entry we can iteratively measure,
-not a claim of Stockfish-equivalent playing strength.
+another third-party engine.
 
 The compiled search visits roughly fifteen times as many nodes per move as the initial
 python-chess search in local fixed-time measurements. Smoke tests scored +2 =0 -0 against the
