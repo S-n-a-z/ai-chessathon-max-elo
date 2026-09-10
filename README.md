@@ -118,5 +118,4 @@ happens on the platform, and the validation log on your dashboard is the authori
 
 ## The rules
 
-[aichessathon.com/docs](https://aichessathon.com/docs) is canonical and changes. Read it before
-you upload.
+[aichessathon.com/docs](https://aichessathon.com/docs) is canonical and may change.
