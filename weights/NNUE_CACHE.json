@@ -1,0 +1,1186 @@
+{
+  "complete": true,
+  "completion_reason": "source exhausted",
+  "config": {
+    "balanced": true,
+    "competition_exclusion_sha256": "1fc56f28894d6edcbefc2edb27e5ba8a3e9e5a27d63af52a913e4951036cfbaf",
+    "compression": "parquet-internal",
+    "input_format": "parquet",
+    "max_teacher_abs_cp": 2000.0,
+    "min_depth": 24,
+    "quiet_only": "not checked; PV1 legal, non-capture, non-promotion, non-check",
+    "residual_clip_cp": 1200.0,
+    "sample_rate": 1.0,
+    "score_convention": "Lichess dump cp is white-centric; no turn-dependent sign flip",
+    "seed": 20260907,
+    "selection": "greatest depth, then greatest knodes, first PV",
+    "source": {
+      "kind": "file",
+      "mtime_ns": 1788800593108111100,
+      "path": "C:/Users/galac/AppData/Local/Temp/blockshark-training/lichess-evals-data_0000.parquet",
+      "size_bytes": 2118195009
+    },
+    "source_sha256": "c004ce90acd84e0db3c55ad8489bce42114b37558ab97400d9a20a31dd0f864a",
+    "test_fraction": 0.1,
+    "validation_fraction": 0.1
+  },
+  "format_version": 1,
+  "kind": "blockshark.king-nnue-labelled-shards",
+  "official_source_url": "https://database.lichess.org/lichess_db_eval.jsonl.zst",
+  "progress": {
+    "accepted": 908604,
+    "balance_bucket_full": 4925757,
+    "below_min_depth": 5636220,
+    "bucket_counts": [
+      28786,
+      66667,
+      66667,
+      66667,
+      56549,
+      49796,
+      66667,
+      66667,
+      66667,
+      66667,
+      66666,
+      40140,
+      66666,
+      66666,
+      66666
+    ],
+    "competition_positions_excluded": 99,
+    "hash_sample_rejected": 0,
+    "invalid_fen": 44417,
+    "invalid_json": 0,
+    "missing_cp": 2074967,
+    "nonquiet_rejected": 569295,
+    "outside_score_cutoff": 84779,
+    "rows_processed": 54372489,
+    "split_counts": {
+      "test": 90610,
+      "train": 727142,
+      "validation": 90852
+    }
+  },
+  "provenance": {
+    "baseline_evaluator": "games\\revamp\\baseline\\fast_engine.py",
+    "baseline_evaluator_sha256": "b00ce99588ea3c38822b56e81bd875cfb337dc3912e6e2c946c7efa26a188d12",
+    "builder_sha256": "b3723ac4b6f5c509332dfd6cbf597c1e7badc417048bba0b068ad9d85733e523"
+  },
+  "shards": [
+    {
+      "bucket_counts": [
+        101,
+        574,
+        16714,
+        1199,
+        240,
+        178,
+        268,
+        1577,
+        477,
+        245,
+        217,
+        106,
+        1975,
+        285,
+        844
+      ],
+      "file": "shard-00000.npz",
+      "positions": 25000,
+      "sha256": "a860b71c9f600b765ed7f9a24488be4e06154c12581da04d4ed2865d576a9ec1",
+      "split_counts": {
+        "test": 2550,
+        "train": 19995,
+        "validation": 2455
+      }
+    },
+    {
+      "bucket_counts": [
+        103,
+        655,
+        16446,
+        1318,
+        254,
+        210,
+        262,
+        1694,
+        379,
+        252,
+        194,
+        81,
+        2223,
+        252,
+        677
+      ],
+      "file": "shard-00001.npz",
+      "positions": 25000,
+      "sha256": "48f3cb1c907f4c37aaa7e96045e53a70899d9c97080da239f07fc1553432f9cc",
+      "split_counts": {
+        "test": 2448,
+        "train": 20032,
+        "validation": 2520
+      }
+    },
+    {
+      "bucket_counts": [
+        135,
+        667,
+        15912,
+        1339,
+        282,
+        232,
+        309,
+        1957,
+        385,
+        217,
+        199,
+        81,
+        2309,
+        310,
+        666
+      ],
+      "file": "shard-00002.npz",
+      "positions": 25000,
+      "sha256": "e6240d21ddcb86d6b5861e489148270a9ef7ab2779c211f2b75fc95e6243e23a",
+      "split_counts": {
+        "test": 2432,
+        "train": 20106,
+        "validation": 2462
+      }
+    },
+    {
+      "bucket_counts": [
+        107,
+        587,
+        15080,
+        1312,
+        260,
+        190,
+        255,
+        1728,
+        429,
+        292,
+        243,
+        146,
+        3278,
+        378,
+        715
+      ],
+      "file": "shard-00003.npz",
+      "positions": 25000,
+      "sha256": "7921b307cd4e82f3e07de5089600757a5c6ddeaa5bd487efa86634cf043f48c4",
+      "split_counts": {
+        "test": 2544,
+        "train": 19940,
+        "validation": 2516
+      }
+    },
+    {
+      "bucket_counts": [
+        277,
+        1411,
+        2515,
+        3913,
+        719,
+        488,
+        591,
+        4171,
+        1071,
+        644,
+        623,
+        287,
+        6149,
+        748,
+        1393
+      ],
+      "file": "shard-00004.npz",
+      "positions": 25000,
+      "sha256": "2360c35b4affdf5aa2832464a9b27d377324c90647de2fa4e86af5bfab93485a",
+      "split_counts": {
+        "test": 2446,
+        "train": 19979,
+        "validation": 2575
+      }
+    },
+    {
+      "bucket_counts": [
+        369,
+        1578,
+        0,
+        4166,
+        776,
+        551,
+        724,
+        4516,
+        1369,
+        1003,
+        627,
+        320,
+        6486,
+        817,
+        1698
+      ],
+      "file": "shard-00005.npz",
+      "positions": 25000,
+      "sha256": "839f81b15900c3121a8223e151575b4cc68ac6f73d12569c24ad852c107d2d77",
+      "split_counts": {
+        "test": 2470,
+        "train": 20065,
+        "validation": 2465
+      }
+    },
+    {
+      "bucket_counts": [
+        361,
+        1789,
+        0,
+        4015,
+        718,
+        573,
+        833,
+        5115,
+        1172,
+        803,
+        823,
+        398,
+        6463,
+        800,
+        1137
+      ],
+      "file": "shard-00006.npz",
+      "positions": 25000,
+      "sha256": "719e2242ac9bad938420c94b5818b864d31ca255acee1c17fde7a7a3af8781a6",
+      "split_counts": {
+        "test": 2487,
+        "train": 20038,
+        "validation": 2475
+      }
+    },
+    {
+      "bucket_counts": [
+        354,
+        1910,
+        0,
+        3939,
+        760,
+        580,
+        831,
+        5018,
+        1299,
+        888,
+        733,
+        368,
+        6261,
+        828,
+        1231
+      ],
+      "file": "shard-00007.npz",
+      "positions": 25000,
+      "sha256": "4176a503126d26d2c33152afc2ca7d2ad6799905271028a25c3851a4dbf2ce1e",
+      "split_counts": {
+        "test": 2492,
+        "train": 19954,
+        "validation": 2554
+      }
+    },
+    {
+      "bucket_counts": [
+        350,
+        1770,
+        0,
+        4273,
+        773,
+        648,
+        738,
+        5738,
+        1077,
+        845,
+        647,
+        292,
+        5816,
+        859,
+        1174
+      ],
+      "file": "shard-00008.npz",
+      "positions": 25000,
+      "sha256": "f51f15322c26fd90eabc40689fd46f255d9c81bb2ae3e25cd5073574c1aff18a",
+      "split_counts": {
+        "test": 2463,
+        "train": 19995,
+        "validation": 2542
+      }
+    },
+    {
+      "bucket_counts": [
+        344,
+        1776,
+        0,
+        4097,
+        809,
+        634,
+        896,
+        5133,
+        1277,
+        881,
+        721,
+        406,
+        5836,
+        789,
+        1401
+      ],
+      "file": "shard-00009.npz",
+      "positions": 25000,
+      "sha256": "17b97d713f83ff0bd29680f5f6fc4a729bc945d98889cfa465a2c18df9cab8b9",
+      "split_counts": {
+        "test": 2498,
+        "train": 19991,
+        "validation": 2511
+      }
+    },
+    {
+      "bucket_counts": [
+        412,
+        1688,
+        0,
+        4072,
+        828,
+        478,
+        968,
+        5345,
+        1295,
+        935,
+        744,
+        453,
+        5964,
+        792,
+        1026
+      ],
+      "file": "shard-00010.npz",
+      "positions": 25000,
+      "sha256": "5fbed91d91a408c7e0cba16a24d06d36a1729c29379de9f1d428ba52e1c38190",
+      "split_counts": {
+        "test": 2484,
+        "train": 20008,
+        "validation": 2508
+      }
+    },
+    {
+      "bucket_counts": [
+        316,
+        1670,
+        0,
+        3333,
+        617,
+        539,
+        884,
+        5835,
+        1273,
+        683,
+        726,
+        440,
+        6526,
+        860,
+        1298
+      ],
+      "file": "shard-00011.npz",
+      "positions": 25000,
+      "sha256": "ad482cf0c1ba60b483e15ad004524b62426c3bf651bed78e28a1952e00476ca3",
+      "split_counts": {
+        "test": 2555,
+        "train": 19969,
+        "validation": 2476
+      }
+    },
+    {
+      "bucket_counts": [
+        168,
+        811,
+        0,
+        2389,
+        394,
+        315,
+        1014,
+        9427,
+        1315,
+        692,
+        467,
+        340,
+        6011,
+        563,
+        1094
+      ],
+      "file": "shard-00012.npz",
+      "positions": 25000,
+      "sha256": "abf4bd95c938f74336fc1e3d5cc67aa5e9fed35d0a3688ec24ca0d4d9dd65ce1",
+      "split_counts": {
+        "test": 2483,
+        "train": 19981,
+        "validation": 2536
+      }
+    },
+    {
+      "bucket_counts": [
+        151,
+        676,
+        0,
+        1399,
+        349,
+        464,
+        1079,
+        9241,
+        1457,
+        890,
+        3001,
+        1933,
+        1369,
+        1160,
+        1831
+      ],
+      "file": "shard-00013.npz",
+      "positions": 25000,
+      "sha256": "bf6e7ed8345822ab8d8b835a420f0681ae10c33f19cd9809524bc3bbc8251cdc",
+      "split_counts": {
+        "test": 2506,
+        "train": 20057,
+        "validation": 2437
+      }
+    },
+    {
+      "bucket_counts": [
+        692,
+        2928,
+        0,
+        6787,
+        1175,
+        1208,
+        1549,
+        172,
+        2266,
+        1536,
+        1556,
+        765,
+        0,
+        1511,
+        2855
+      ],
+      "file": "shard-00014.npz",
+      "positions": 25000,
+      "sha256": "6067b1a37775d027c930fcbcf96c04ac295184daa718e7643287f9251af61ccd",
+      "split_counts": {
+        "test": 2480,
+        "train": 19991,
+        "validation": 2529
+      }
+    },
+    {
+      "bucket_counts": [
+        595,
+        2907,
+        0,
+        6881,
+        1412,
+        1041,
+        1689,
+        0,
+        2425,
+        1509,
+        1359,
+        745,
+        0,
+        1661,
+        2776
+      ],
+      "file": "shard-00015.npz",
+      "positions": 25000,
+      "sha256": "3d02f11cba5cc25092d200bf346f0b4f82f21a995f03683d7ddcd7f83595cfb8",
+      "split_counts": {
+        "test": 2456,
+        "train": 20118,
+        "validation": 2426
+      }
+    },
+    {
+      "bucket_counts": [
+        482,
+        2381,
+        0,
+        4195,
+        789,
+        955,
+        1801,
+        0,
+        4171,
+        1692,
+        1537,
+        1209,
+        0,
+        3041,
+        2747
+      ],
+      "file": "shard-00016.npz",
+      "positions": 25000,
+      "sha256": "37bab6d4190df0ab7a13b71c74af7cc422da00e267cf7df23396747d89933453",
+      "split_counts": {
+        "test": 2508,
+        "train": 19974,
+        "validation": 2518
+      }
+    },
+    {
+      "bucket_counts": [
+        454,
+        2369,
+        0,
+        4870,
+        1037,
+        882,
+        1310,
+        0,
+        2240,
+        1552,
+        3162,
+        984,
+        0,
+        1523,
+        4617
+      ],
+      "file": "shard-00017.npz",
+      "positions": 25000,
+      "sha256": "1f22bfafb46910714827580f9c6ebc33d71ca1d97258ca826d38b91ec0e3def8",
+      "split_counts": {
+        "test": 2523,
+        "train": 19989,
+        "validation": 2488
+      }
+    },
+    {
+      "bucket_counts": [
+        785,
+        3939,
+        0,
+        3170,
+        1535,
+        1337,
+        2056,
+        0,
+        2796,
+        1779,
+        1852,
+        966,
+        0,
+        1858,
+        2927
+      ],
+      "file": "shard-00018.npz",
+      "positions": 25000,
+      "sha256": "fd80a18267bd184b8aa5dfa1bdecaebf91c0d347ee4b5b2f52233c3f0c1f21de",
+      "split_counts": {
+        "test": 2527,
+        "train": 19888,
+        "validation": 2585
+      }
+    },
+    {
+      "bucket_counts": [
+        996,
+        4775,
+        0,
+        0,
+        1971,
+        1548,
+        2321,
+        0,
+        3181,
+        1987,
+        2113,
+        963,
+        0,
+        1999,
+        3146
+      ],
+      "file": "shard-00019.npz",
+      "positions": 25000,
+      "sha256": "c1e4d89a270d1beb2f8591895135b146f5fc63ad3aea8007a07ba6a800a875d1",
+      "split_counts": {
+        "test": 2486,
+        "train": 19927,
+        "validation": 2587
+      }
+    },
+    {
+      "bucket_counts": [
+        858,
+        4188,
+        0,
+        0,
+        1944,
+        1583,
+        2499,
+        0,
+        3265,
+        2268,
+        2103,
+        970,
+        0,
+        1918,
+        3404
+      ],
+      "file": "shard-00020.npz",
+      "positions": 25000,
+      "sha256": "73fa343534396891fbac633b3d2b3cbb201ebc852a8faf61cbef91edf8a04a52",
+      "split_counts": {
+        "test": 2415,
+        "train": 20122,
+        "validation": 2463
+      }
+    },
+    {
+      "bucket_counts": [
+        695,
+        3133,
+        0,
+        0,
+        1101,
+        1342,
+        3505,
+        0,
+        3159,
+        1567,
+        2777,
+        1590,
+        0,
+        2658,
+        3473
+      ],
+      "file": "shard-00021.npz",
+      "positions": 25000,
+      "sha256": "91010c3dcbd307f36c03d4fbd48667dfc34c9f8f1205c69103032aabfe13bb80",
+      "split_counts": {
+        "test": 2539,
+        "train": 20045,
+        "validation": 2416
+      }
+    },
+    {
+      "bucket_counts": [
+        993,
+        4463,
+        0,
+        0,
+        1878,
+        1603,
+        2282,
+        0,
+        3280,
+        2106,
+        2168,
+        1070,
+        0,
+        1711,
+        3446
+      ],
+      "file": "shard-00022.npz",
+      "positions": 25000,
+      "sha256": "c4d2db4ebf1f073f1ce6312a797769a22953139d63ef55ba8c5f83ddb7e74c79",
+      "split_counts": {
+        "test": 2445,
+        "train": 19951,
+        "validation": 2604
+      }
+    },
+    {
+      "bucket_counts": [
+        713,
+        3321,
+        0,
+        0,
+        1242,
+        1378,
+        2252,
+        0,
+        4262,
+        2510,
+        1925,
+        1284,
+        0,
+        2115,
+        3998
+      ],
+      "file": "shard-00023.npz",
+      "positions": 25000,
+      "sha256": "8d2345d0dd1cb94ae65b548426fdb7d81416f2b587af1e2252d2da9c4f7cd9ce",
+      "split_counts": {
+        "test": 2493,
+        "train": 20037,
+        "validation": 2470
+      }
+    },
+    {
+      "bucket_counts": [
+        412,
+        2132,
+        0,
+        0,
+        847,
+        1162,
+        1416,
+        0,
+        3268,
+        3791,
+        2464,
+        1257,
+        0,
+        1595,
+        6656
+      ],
+      "file": "shard-00024.npz",
+      "positions": 25000,
+      "sha256": "e6effaab04ae0376a5732f4a3c460396c1f47f4774dae599a5e42d14625cb9a7",
+      "split_counts": {
+        "test": 2567,
+        "train": 19934,
+        "validation": 2499
+      }
+    },
+    {
+      "bucket_counts": [
+        806,
+        4066,
+        0,
+        0,
+        1692,
+        1489,
+        2112,
+        0,
+        3263,
+        2264,
+        2372,
+        1231,
+        0,
+        1849,
+        3856
+      ],
+      "file": "shard-00025.npz",
+      "positions": 25000,
+      "sha256": "cc9b7fa69db6177fc83fd18b241a45318628d684f7fee0b203a8448dbefe5195",
+      "split_counts": {
+        "test": 2480,
+        "train": 20002,
+        "validation": 2518
+      }
+    },
+    {
+      "bucket_counts": [
+        968,
+        4582,
+        0,
+        0,
+        1874,
+        1519,
+        2342,
+        0,
+        3313,
+        2171,
+        2036,
+        1093,
+        0,
+        2076,
+        3026
+      ],
+      "file": "shard-00026.npz",
+      "positions": 25000,
+      "sha256": "6027a596f5809b37caa5f32a46e91896fe8b989c9b817ed770865940e5f9031b",
+      "split_counts": {
+        "test": 2456,
+        "train": 20081,
+        "validation": 2463
+      }
+    },
+    {
+      "bucket_counts": [
+        847,
+        3921,
+        0,
+        0,
+        1892,
+        1715,
+        2767,
+        0,
+        3181,
+        2020,
+        2054,
+        1066,
+        0,
+        2192,
+        3345
+      ],
+      "file": "shard-00027.npz",
+      "positions": 25000,
+      "sha256": "3916f2edbaff2768e22de92b8c975e5183ad7fd99ead4805577edab56d07f680",
+      "split_counts": {
+        "test": 2521,
+        "train": 20040,
+        "validation": 2439
+      }
+    },
+    {
+      "bucket_counts": [
+        1067,
+        0,
+        0,
+        0,
+        2173,
+        1580,
+        2814,
+        0,
+        3971,
+        2614,
+        2668,
+        1198,
+        0,
+        2270,
+        209
+      ],
+      "file": "shard-00028.npz",
+      "positions": 20564,
+      "sha256": "fdd0b3733d4970aeb1a8044cd9a977338c0c217943635d162bdac2dca5e771f7",
+      "split_counts": {
+        "test": 2104,
+        "train": 16375,
+        "validation": 2085
+      }
+    },
+    {
+      "bucket_counts": [
+        1234,
+        0,
+        0,
+        0,
+        2547,
+        1862,
+        2845,
+        0,
+        4235,
+        2594,
+        2203,
+        1173,
+        0,
+        2566,
+        0
+      ],
+      "file": "shard-00029.npz",
+      "positions": 21259,
+      "sha256": "d77d821f0af5506859d4ac74ed672dae264a820b94fececa7ab41b4945c4a837",
+      "split_counts": {
+        "test": 2147,
+        "train": 17012,
+        "validation": 2100
+      }
+    },
+    {
+      "bucket_counts": [
+        1134,
+        0,
+        0,
+        0,
+        2400,
+        1504,
+        2864,
+        0,
+        116,
+        2628,
+        2300,
+        1330,
+        0,
+        2612,
+        0
+      ],
+      "file": "shard-00030.npz",
+      "positions": 16888,
+      "sha256": "d3ddfd80dab71330cc8bc36da651d3cf5880e18526d88725ae220c86ee1ff5f0",
+      "split_counts": {
+        "test": 1741,
+        "train": 13408,
+        "validation": 1739
+      }
+    },
+    {
+      "bucket_counts": [
+        1236,
+        0,
+        0,
+        0,
+        2387,
+        1943,
+        2849,
+        0,
+        0,
+        3004,
+        2684,
+        1634,
+        0,
+        2513,
+        0
+      ],
+      "file": "shard-00031.npz",
+      "positions": 18250,
+      "sha256": "4b4224a5ff0b719c56916700b9086cdc10b5eb0f13da878ed2353d9de981150f",
+      "split_counts": {
+        "test": 1806,
+        "train": 14634,
+        "validation": 1810
+      }
+    },
+    {
+      "bucket_counts": [
+        1474,
+        0,
+        0,
+        0,
+        2301,
+        2305,
+        3699,
+        0,
+        0,
+        3138,
+        3195,
+        1625,
+        0,
+        2470,
+        0
+      ],
+      "file": "shard-00032.npz",
+      "positions": 20207,
+      "sha256": "7bf55270ea3eb0a2407ae42d808264c7be5863b273e64f667980ac69cdd06572",
+      "split_counts": {
+        "test": 1978,
+        "train": 16237,
+        "validation": 1992
+      }
+    },
+    {
+      "bucket_counts": [
+        1269,
+        0,
+        0,
+        0,
+        2419,
+        2272,
+        3809,
+        0,
+        0,
+        3457,
+        3326,
+        2196,
+        0,
+        2865,
+        0
+      ],
+      "file": "shard-00033.npz",
+      "positions": 21613,
+      "sha256": "4a20f62e9c20bba0651e7a6222074a6edad068634436c006dc75cce81a36a1a5",
+      "split_counts": {
+        "test": 2151,
+        "train": 17300,
+        "validation": 2162
+      }
+    },
+    {
+      "bucket_counts": [
+        1138,
+        0,
+        0,
+        0,
+        2253,
+        2168,
+        3238,
+        0,
+        0,
+        3015,
+        2859,
+        1461,
+        0,
+        2459,
+        0
+      ],
+      "file": "shard-00034.npz",
+      "positions": 18591,
+      "sha256": "a0ed9fe10b5b303bec46218e6ecd0729a46314b33bd98a35b75b1d7e1b465597",
+      "split_counts": {
+        "test": 1880,
+        "train": 14906,
+        "validation": 1805
+      }
+    },
+    {
+      "bucket_counts": [
+        1179,
+        0,
+        0,
+        0,
+        2209,
+        1988,
+        3473,
+        0,
+        0,
+        2817,
+        2685,
+        1571,
+        0,
+        2913,
+        0
+      ],
+      "file": "shard-00035.npz",
+      "positions": 18835,
+      "sha256": "59d79aa5db6d3f2417dad8291a7d6f9589ed42479abf3ed6db32f16a058e89a6",
+      "split_counts": {
+        "test": 1888,
+        "train": 15020,
+        "validation": 1927
+      }
+    },
+    {
+      "bucket_counts": [
+        1187,
+        0,
+        0,
+        0,
+        2251,
+        2094,
+        1523,
+        0,
+        0,
+        2853,
+        2714,
+        1654,
+        0,
+        2661,
+        0
+      ],
+      "file": "shard-00036.npz",
+      "positions": 16937,
+      "sha256": "90550af37f9c06ea283bb267db65f7c85be6fa8cd2a6d02d129cff485defb3cf",
+      "split_counts": {
+        "test": 1651,
+        "train": 13569,
+        "validation": 1717
+      }
+    },
+    {
+      "bucket_counts": [
+        1181,
+        0,
+        0,
+        0,
+        2324,
+        1992,
+        0,
+        0,
+        0,
+        2525,
+        2589,
+        1635,
+        0,
+        2605,
+        0
+      ],
+      "file": "shard-00037.npz",
+      "positions": 14851,
+      "sha256": "58f44bead2468a3d277912eea4ea88d9dbc0b364f310433fe2289222a18d90ad",
+      "split_counts": {
+        "test": 1448,
+        "train": 11954,
+        "validation": 1449
+      }
+    },
+    {
+      "bucket_counts": [
+        1143,
+        0,
+        0,
+        0,
+        2065,
+        2153,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1519,
+        0,
+        2550,
+        0
+      ],
+      "file": "shard-00038.npz",
+      "positions": 9430,
+      "sha256": "e502670fe6d5afa8a44452df207eeb26266e0dae7ff1585248f1db724b18ba70",
+      "split_counts": {
+        "test": 928,
+        "train": 7583,
+        "validation": 919
+      }
+    },
+    {
+      "bucket_counts": [
+        1189,
+        0,
+        0,
+        0,
+        2118,
+        2068,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1473,
+        0,
+        1034,
+        0
+      ],
+      "file": "shard-00039.npz",
+      "positions": 7882,
+      "sha256": "19195b7a37a1bafdcadf141f5aad39ca19e598707630834d13f8aca0c9e47cd7",
+      "split_counts": {
+        "test": 797,
+        "train": 6289,
+        "validation": 796
+      }
+    },
+    {
+      "bucket_counts": [
+        511,
+        0,
+        0,
+        0,
+        934,
+        1025,
+        0,
+        0,
+        0,
+        0,
+        0,
+        827,
+        0,
+        0,
+        0
+      ],
+      "file": "shard-00040.npz",
+      "positions": 3297,
+      "sha256": "37b834b3063dfd142fe1dd69f8c231fa68afef3d9e9e777503154513e85a98bf",
+      "split_counts": {
+        "test": 337,
+        "train": 2646,
+        "validation": 314
+      }
+    }
+  ],
+  "source_documentation": "https://database.lichess.org/#evals",
+  "source_license": "CC0",
+  "trainer_contract": {
+    "feature_layout": "train_king_nnue.sparse_features v1",
+    "labelled_positions_exported_with_submission": false,
+    "target": "clipped white-centric teacher cp minus fast_engine static cp"
+  }
+}

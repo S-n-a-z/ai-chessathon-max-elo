@@ -1,0 +1,185 @@
+{
+  "format_version": 1,
+  "architecture": "shared symmetric king-bucket sparse residual",
+  "feature_layout": {
+    "king_buckets": 32,
+    "piece_planes": 12,
+    "squares": 64,
+    "input_features": 24576,
+    "horizontal_king_canonicalization": true,
+    "perspective_weight_sharing": true,
+    "activation": "clipped ReLU [0,1.0]",
+    "hidden": 32,
+    "output_bias": false
+  },
+  "purpose": "white-centric correction to the current handcrafted static evaluator",
+  "provenance": {
+    "trainer_sha256": "0dd4066687534bd6f9b480a60045d01345fb4fdffbb5b2cb421113893b6caa15",
+    "baseline_evaluator": "games\\revamp\\baseline\\fast_engine.py",
+    "baseline_evaluator_sha256": "b00ce99588ea3c38822b56e81bd875cfb337dc3912e6e2c946c7efa26a188d12",
+    "cache_manifest_sha256": "7076ae880ae6963e904393b5cc80117db64266cea0c995713a6739aab269f121",
+    "cache_directory": "C:/Users/galac/AppData/Local/Temp/blockshark-training/cache-revamp-quiet-1m",
+    "cache_source": {
+      "kind": "file",
+      "mtime_ns": 1788800593108111100,
+      "path": "C:/Users/galac/AppData/Local/Temp/blockshark-training/lichess-evals-data_0000.parquet",
+      "size_bytes": 2118195009
+    },
+    "cache_source_sha256": "c004ce90acd84e0db3c55ad8489bce42114b37558ab97400d9a20a31dd0f864a",
+    "source_license": "CC0"
+  },
+  "data": {
+    "split_counts": {
+      "train": 727142,
+      "validation": 90852,
+      "test": 90610
+    },
+    "validation_split": "stable canonical-FEN hash; competition positions excluded",
+    "test_split_reported": false,
+    "test_split_policy": "sealed unless --report-test is explicitly supplied",
+    "labelled_positions_exported": false
+  },
+  "training": {
+    "seed": 20260907,
+    "target_scale_cp": 400.0,
+    "hidden": 32,
+    "epochs_requested": 24,
+    "batch_size": 1024,
+    "learning_rate": 0.002,
+    "weight_decay": 1e-06,
+    "loss": "SmoothL1/Huber, 140 cp transition",
+    "best_epoch": 11,
+    "epochs_completed": 16,
+    "history": [
+      {
+        "epoch": 1.0,
+        "train_huber": 0.37621118330958964,
+        "validation_mae_cp": 208.26907744472322,
+        "learning_rate": 0.0019918726183051198
+      },
+      {
+        "epoch": 2.0,
+        "train_huber": 0.3364207716077664,
+        "validation_mae_cp": 196.64265762985394,
+        "learning_rate": 0.0019676295349746148
+      },
+      {
+        "epoch": 3.0,
+        "train_huber": 0.3130108114939889,
+        "validation_mae_cp": 184.75019198354227,
+        "learning_rate": 0.0019276855558857224
+      },
+      {
+        "epoch": 4.0,
+        "train_huber": 0.2895290702118371,
+        "validation_mae_cp": 184.2096414813343,
+        "learning_rate": 0.0018727241335952168
+      },
+      {
+        "epoch": 5.0,
+        "train_huber": 0.27123014076542196,
+        "validation_mae_cp": 175.3037507878001,
+        "learning_rate": 0.0018036856732766733
+      },
+      {
+        "epoch": 6.0,
+        "train_huber": 0.2510732197025328,
+        "validation_mae_cp": 173.375343050863,
+        "learning_rate": 0.0017217514421272201
+      },
+      {
+        "epoch": 7.0,
+        "train_huber": 0.23477131201873067,
+        "validation_mae_cp": 170.20286067322468,
+        "learning_rate": 0.0016283233575582847
+      },
+      {
+        "epoch": 8.0,
+        "train_huber": 0.22220504654565118,
+        "validation_mae_cp": 169.4068988667788,
+        "learning_rate": 0.001525
+      },
+      {
+        "epoch": 9.0,
+        "train_huber": 0.20933920805544248,
+        "validation_mae_cp": 168.75669365309284,
+        "learning_rate": 0.0014135492607468354
+      },
+      {
+        "epoch": 10.0,
+        "train_huber": 0.20004077257948302,
+        "validation_mae_cp": 169.1954407728485,
+        "learning_rate": 0.0012958780928473948
+      },
+      {
+        "epoch": 11.0,
+        "train_huber": 0.1913902751850815,
+        "validation_mae_cp": 166.72694415170338,
+        "learning_rate": 0.0011739998826090492
+      },
+      {
+        "epoch": 12.0,
+        "train_huber": 0.183850700280124,
+        "validation_mae_cp": 167.75724910444944,
+        "learning_rate": 0.00105
+      },
+      {
+        "epoch": 13.0,
+        "train_huber": 0.17733246664307475,
+        "validation_mae_cp": 167.40634094278266,
+        "learning_rate": 0.000926000117390951
+      },
+      {
+        "epoch": 14.0,
+        "train_huber": 0.17129724141887287,
+        "validation_mae_cp": 166.9583364536357,
+        "learning_rate": 0.0008041219071526054
+      },
+      {
+        "epoch": 15.0,
+        "train_huber": 0.16622793740363528,
+        "validation_mae_cp": 168.3360140600806,
+        "learning_rate": 0.000686450739253165
+      },
+      {
+        "epoch": 16.0,
+        "train_huber": 0.16192898346511744,
+        "validation_mae_cp": 169.21978006396492,
+        "learning_rate": 0.0005750000000000002
+      }
+    ],
+    "validation_float": {
+      "positions": 90852.0,
+      "baseline_objective_mae_cp": 237.77511777396205,
+      "objective_mae_cp": 166.72694415170338,
+      "objective_mae_gain_cp": 71.04817362225867,
+      "baseline_teacher_mae_cp": 239.61571566944042,
+      "corrected_teacher_mae_cp": 168.56347139755206,
+      "corrected_teacher_rmse_cp": 256.28587359740595,
+      "corrected_teacher_p90_error_cp": 380.0
+    },
+    "feature_coverage": {
+      "training_feature_rows": 19872,
+      "training_feature_fraction": 0.80859375,
+      "validation_feature_rows": 17084,
+      "validation_rows_unseen_in_training": 54,
+      "validation_unseen_fraction": 0.0031608522594240226
+    },
+    "validation_quantized": {
+      "positions": 90852.0,
+      "baseline_objective_mae_cp": 237.77511777396205,
+      "objective_mae_cp": 166.7324841124752,
+      "objective_mae_gain_cp": 71.04263366148686,
+      "baseline_teacher_mae_cp": 239.61571566944042,
+      "corrected_teacher_mae_cp": 168.5690140509328,
+      "corrected_teacher_rmse_cp": 256.28324800871474,
+      "corrected_teacher_p90_error_cp": 380.0
+    }
+  },
+  "quantization": {
+    "feature_weights": "symmetric int8, per hidden channel",
+    "feature_bias": "int32 in feature accumulator units",
+    "output_weights": "symmetric int16, one scale"
+  },
+  "elapsed_seconds": 452.442
+}
