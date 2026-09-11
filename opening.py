@@ -20,6 +20,10 @@ except (OSError, ValueError, KeyError, TypeError):
 def choose_opening_move(fen: str) -> str | None:
     """Return a legal book move for an exact opening position, if one is present."""
     board = chess.Board(fen)
+    # The canonical rules limit every book lookup to move number 20 or lower.
+    # A repeated piece arrangement later in the game must go through search.
+    if board.fullmove_number > 20:
+        return None
     uci = BOOK.get(chess.polyglot.zobrist_hash(board))
     if uci is None:
         return None

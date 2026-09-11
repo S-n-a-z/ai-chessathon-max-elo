@@ -12,7 +12,13 @@ import time
 
 import chess
 import numpy as np
-from numba import njit
+from numba import njit, objmode
+
+from neural import BOARD_SIZE as NN_BOARD_SIZE
+from neural import correction as _neural_correction
+
+NN_BLEND = 0.5
+NN_MAX_PHASE = 24
 
 WHITE = 1
 BLACK = -1
@@ -130,8 +136,10 @@ _killers = np.zeros((MAX_PLY, 2), dtype=np.int32)
 _move_buffer = np.zeros((MAX_PLY, MAX_MOVES), dtype=np.int32)
 _score_buffer = np.zeros((MAX_PLY, MAX_MOVES), dtype=np.int32)
 _hash_stack = np.zeros(MAX_PLY, dtype=np.uint64)
-_nodes = np.zeros(2, dtype=np.int64)
+_nodes = np.zeros(3, dtype=np.int64)
 _generation = 1
+# Test workers use the same move-selection policy as the timed entry point.
+USE_ROOT_POSTPROCESS = False
 
 
 @njit(cache=False, inline="always")
@@ -241,6 +249,7 @@ def _generate_pseudo(
     ep_square: int,
     king_square: int,
     row: np.ndarray,
+    tactical_only: bool = False,
 ) -> int:
     count = 0
     for square in range(128):
@@ -261,7 +270,7 @@ def _generate_pseudo(
                 if rank_index == promotion_rank:
                     for promoted in (QUEEN, ROOK, BISHOP, KNIGHT):
                         count = _add_move(row, count, _encode_move(square, target, promoted, 0))
-                else:
+                elif not tactical_only:
                     count = _add_move(row, count, _encode_move(square, target, 0, 0))
                     double_target = square + 2 * step
                     if rank_index == start_rank and board[double_target] == EMPTY:
@@ -285,7 +294,9 @@ def _generate_pseudo(
         elif piece_type == KNIGHT:
             for offset in KNIGHT_OFFSETS:
                 target = square + int(offset)
-                if _on_board(target) and board[target] * side <= 0:
+                if _on_board(target) and board[target] * side <= 0 and (
+                    not tactical_only or board[target] != EMPTY
+                ):
                     count = _add_move(row, count, _encode_move(square, target, 0, 0))
 
         elif piece_type in (BISHOP, ROOK, QUEEN):
@@ -305,7 +316,8 @@ def _generate_pseudo(
                     occupant = int(board[target])
                     if occupant * side > 0:
                         break
-                    count = _add_move(row, count, _encode_move(square, target, 0, 0))
+                    if not tactical_only or occupant:
+                        count = _add_move(row, count, _encode_move(square, target, 0, 0))
                     if occupant:
                         break
                     target += direction
@@ -313,9 +325,13 @@ def _generate_pseudo(
         elif piece_type == KING:
             for offset in KING_OFFSETS:
                 target = square + int(offset)
-                if _on_board(target) and board[target] * side <= 0:
+                if _on_board(target) and board[target] * side <= 0 and (
+                    not tactical_only or board[target] != EMPTY
+                ):
                     count = _add_move(row, count, _encode_move(square, target, 0, 0))
 
+    if tactical_only:
+        return count
     enemy = -side
     if side == WHITE and king_square == 4:
         if (
@@ -447,6 +463,67 @@ def _undo_move(board: np.ndarray, move: int, side: int, captured: int) -> None:
 
 
 @njit(cache=False)
+def _hash_after_move(
+    board: np.ndarray,
+    key: np.uint64,
+    move: int,
+    side: int,
+    captured: int,
+    old_castling: int,
+    new_castling: int,
+    old_ep: int,
+    new_ep: int,
+) -> np.uint64:
+    """Update the position key from the changed squares after making a move."""
+    key = np.uint64(key)
+    origin = _from_square(move)
+    target = _to_square(move)
+    moved = int(board[target])
+    original_piece = side * PAWN if _promotion(move) else moved
+    key ^= Z_SIDE
+    key ^= Z_PIECES[_piece_index(original_piece), origin]
+    key ^= Z_PIECES[_piece_index(moved), target]
+    if captured:
+        captured_square = target - 16 * side if move & FLAG_EP else target
+        key ^= Z_PIECES[_piece_index(captured), captured_square]
+    if move & FLAG_CASTLE:
+        rook_origin = origin + 3 if target > origin else origin - 4
+        rook_target = origin + 1 if target > origin else origin - 1
+        key ^= Z_PIECES[_piece_index(side * ROOK), rook_origin]
+        key ^= Z_PIECES[_piece_index(side * ROOK), rook_target]
+    key ^= Z_CASTLES[old_castling] ^ Z_CASTLES[new_castling]
+    if old_ep >= 0:
+        key ^= Z_EP_FILES[old_ep & 7]
+    if new_ep >= 0:
+        key ^= Z_EP_FILES[new_ep & 7]
+    return key
+
+
+@njit(cache=False)
+def _has_legal_move(
+    board: np.ndarray,
+    side: int,
+    castling: int,
+    ep_square: int,
+    halfmove: int,
+    king_square: int,
+    row: np.ndarray,
+) -> bool:
+    """Prove that a non-check node is not stalemate without testing every quiet."""
+    count = _generate_pseudo(board, side, castling, ep_square, king_square, row)
+    for index in range(count):
+        move = int(row[index])
+        captured, _, _, _, new_king = _make_move(
+            board, move, side, castling, halfmove, king_square
+        )
+        legal = not _is_attacked(board, new_king, -side)
+        _undo_move(board, move, side, captured)
+        if legal:
+            return True
+    return False
+
+
+@njit(cache=False)
 def _generate_legal(
     board: np.ndarray,
     side: int,
@@ -505,7 +582,7 @@ def _mobility(board: np.ndarray, square: int, side: int, piece_type: int) -> int
 
 
 @njit(cache=False)
-def _evaluate(board: np.ndarray, side: int, white_king: int, black_king: int) -> int:
+def _evaluate_classical(board: np.ndarray, side: int, white_king: int, black_king: int) -> int:
     mg = 0
     eg = 0
     phase = 0
@@ -733,6 +810,21 @@ def _to_tt(score: int, ply: int) -> int:
     return score
 
 
+
+
+@njit(cache=False)
+def _evaluate(board: np.ndarray, side: int, white_king: int, black_king: int) -> int:
+    classical = _evaluate_classical(board, side, white_king, black_king)
+    if NN_MAX_PHASE < 24:
+        phase = 0
+        for rank in range(8):
+            for file in range(8):
+                phase += PHASE_VALUE[abs(int(board[rank * 16 + file]))]
+        if phase > NN_MAX_PHASE:
+            return classical
+    correction = _neural_correction(board, side, white_king, black_king)
+    return classical + round(correction * side * NN_BLEND)
+
 @njit(cache=False)
 def _is_repeated(hash_stack: np.ndarray, key: np.uint64, ply: int, halfmove: int) -> bool:
     if ply < 4 or halfmove < 4:
@@ -746,10 +838,19 @@ def _is_repeated(hash_stack: np.ndarray, key: np.uint64, ply: int, halfmove: int
     return False
 
 
-@njit(cache=False, inline="always")
+@njit(cache=False)
 def _out_of_nodes(nodes: np.ndarray) -> bool:
     nodes[0] += 1
-    return nodes[0] >= nodes[1]
+    if nodes[0] >= nodes[1]:
+        return True
+    # A real deadline remains reliable when evaluations or CPU speed vary.
+    # Crossing into Python once per 1024 nodes is cheap compared with a flag fall.
+    if nodes[2] > 0 and (nodes[0] & 1023) == 0:
+        with objmode(now="int64"):
+            now = time.perf_counter_ns()
+        if now >= nodes[2]:
+            return True
+    return False
 
 
 @njit(cache=False)
@@ -777,10 +878,18 @@ def _quiescence(
         white_king = king_square if side == WHITE else opponent_king
         black_king = opponent_king if side == WHITE else king_square
         return _evaluate(board, side, white_king, black_king)
-    key = _position_hash(board, side, castling, ep_square)
+    key = hash_stack[ply]
     if halfmove >= 100 or _is_repeated(hash_stack, key, ply, halfmove):
         return 0
     hash_stack[ply] = key
+
+    # Neither side can force a mate score outside the distance implied by this
+    # ply.  Tightening the window avoids re-searching already-proven longer
+    # mates while preserving the existing mate-in-N score convention.
+    alpha = max(alpha, -MATE + ply)
+    beta = min(beta, MATE - ply - 1)
+    if alpha >= beta:
+        return alpha
 
     in_check = _is_attacked(board, king_square, -side)
     white_king = king_square if side == WHITE else opponent_king
@@ -789,19 +898,24 @@ def _quiescence(
     if not in_check:
         stand_pat = _evaluate(board, side, white_king, black_king)
         if stand_pat >= beta:
+            if not _has_legal_move(
+                board, side, castling, ep_square, halfmove, king_square, move_buffer[ply]
+            ):
+                return 0
             return stand_pat
         if stand_pat > alpha:
             alpha = stand_pat
 
-    count = _generate_legal(
-        board, side, castling, ep_square, halfmove, king_square, ply, move_buffer
+    # Quiet moves cannot improve quiescence unless they evade check. Generate
+    # captures/promotions directly, and test their legality only when searched.
+    count = _generate_pseudo(
+        board, side, castling, ep_square, king_square, move_buffer[ply], not in_check
     )
-    if count == 0:
-        return -MATE + ply if in_check else 0
     _order_moves(
         board, side, count, 0, ply, move_buffer, score_buffer, killers, history
     )
 
+    legal_count = 0
     for index in range(count):
         move = int(move_buffer[ply, index])
         promoted = _promotion(move)
@@ -813,6 +927,13 @@ def _quiescence(
         captured, new_castling, new_ep, new_halfmove, new_king = _make_move(
             board, move, side, castling, halfmove, king_square
         )
+        hash_stack[ply + 1] = _hash_after_move(
+            board, key, move, side, captured, castling, new_castling, ep_square, new_ep
+        )
+        if _is_attacked(board, new_king, -side):
+            _undo_move(board, move, side, captured)
+            continue
+        legal_count += 1
         child = _quiescence(
             board,
             -side,
@@ -839,9 +960,18 @@ def _quiescence(
             return score
         if score > alpha:
             alpha = score
+    if legal_count == 0:
+        if in_check:
+            return -MATE + ply
+        if not _has_legal_move(
+            board, side, castling, ep_square, halfmove, king_square, move_buffer[ply]
+        ):
+            return 0
     return alpha
 
 
+# Keep recursive integer arguments uniformly typed at call sites. Literal specializations
+# otherwise compile duplicate search/quiescence trees during the cold import.
 @njit(cache=False)
 def _search(
     board: np.ndarray,
@@ -894,10 +1024,16 @@ def _search(
         white_king = king_square if side == WHITE else opponent_king
         black_king = opponent_king if side == WHITE else king_square
         return _evaluate(board, side, white_king, black_king)
-    key = _position_hash(board, side, castling, ep_square)
+    key = hash_stack[ply]
     if halfmove >= 100 or _is_repeated(hash_stack, key, ply, halfmove):
         return 0
     hash_stack[ply] = key
+
+    alpha = max(alpha, -MATE + ply)
+    beta = min(beta, MATE - ply - 1)
+    if alpha >= beta:
+        return alpha
+
     tt_index = int(key & np.uint64(TT_MASK))
     tt_move = 0
     if tt_ages[tt_index] and tt_keys[tt_index] == key:
@@ -916,10 +1052,12 @@ def _search(
 
     original_alpha = alpha
     in_check = _is_attacked(board, king_square, -side)
-    count = _generate_legal(
-        board, side, castling, ep_square, halfmove, king_square, ply, move_buffer
+    count = _generate_pseudo(
+        board, side, castling, ep_square, king_square, move_buffer[ply]
     )
-    if count == 0:
+    if count == 0 or not _has_legal_move(
+        board, side, castling, ep_square, halfmove, king_square, move_buffer[ply]
+    ):
         return -MATE + ply if in_check else 0
     if _insufficient_material(board):
         return 0
@@ -950,9 +1088,13 @@ def _search(
         )
         if razor == ABORT or razor <= alpha:
             return razor
+        # Quiescence owns this ply's move buffer and stores only tactical moves.
+        count = _generate_pseudo(
+            board, side, castling, ep_square, king_square, move_buffer[ply]
+        )
 
     has_non_pawn = False
-    if depth >= 3 and not in_check and static_score >= beta:
+    if depth >= 3 and not in_check and static_score >= beta and halfmove >= 0:
         for square in range(128):
             if square & 0x88:
                 continue
@@ -962,12 +1104,16 @@ def _search(
                 break
     if has_non_pawn:
         reduction = 2 + depth // 4
+        null_key = key ^ Z_SIDE
+        if ep_square >= 0:
+            null_key ^= Z_EP_FILES[ep_square & 7]
+        hash_stack[ply + 1] = null_key
         null_child = _search(
             board,
             -side,
             castling,
-            -1,
-            0,
+            np.int64(-1),
+            np.int64(-1),  # Marks a null move so a second null cannot follow it.
             opponent_king,
             king_square,
             depth - 1 - reduction,
@@ -999,12 +1145,23 @@ def _search(
     best_score = -INF
     best_move = 0
     side_index = 0 if side == WHITE else 1
-    for move_index in range(count):
-        move = int(move_buffer[ply, move_index])
+    legal_index = 0
+    for candidate_index in range(count):
+        move = int(move_buffer[ply, candidate_index])
         capture = _capture_value(board, move, side) > 0
         quiet = not capture and _promotion(move) == 0
         captured, new_castling, new_ep, new_halfmove, new_king = _make_move(
             board, move, side, castling, halfmove, king_square
+        )
+        # Test legality when a candidate is actually searched. Cutoffs often
+        # leave most quiet moves untouched. Count only legal moves for PVS/LMR.
+        if _is_attacked(board, new_king, -side):
+            _undo_move(board, move, side, captured)
+            continue
+        move_index = legal_index
+        legal_index += 1
+        hash_stack[ply + 1] = _hash_after_move(
+            board, key, move, side, captured, castling, new_castling, ep_square, new_ep
         )
         gives_check = _is_attacked(board, opponent_king, side)
         extension = 1 if in_check and depth >= 2 and ply < 12 else 0
@@ -1223,6 +1380,9 @@ def _root_search(
         captured, new_castling, new_ep, new_halfmove, new_king = _make_move(
             board, move, side, castling, halfmove, king_square
         )
+        hash_stack[0 + 1] = _hash_after_move(
+            board, key, move, side, captured, castling, new_castling, ep_square, new_ep
+        )
         if move_index == 0:
             child = _search(
                 board,
@@ -1235,7 +1395,7 @@ def _root_search(
                 depth - 1,
                 -beta,
                 -alpha,
-                1,
+                np.int64(1),
                 generation,
                 tt_keys,
                 tt_scores,
@@ -1262,7 +1422,7 @@ def _root_search(
                 depth - 1,
                 -alpha - 1,
                 -alpha,
-                1,
+                np.int64(1),
                 generation,
                 tt_keys,
                 tt_scores,
@@ -1291,7 +1451,7 @@ def _root_search(
                         depth - 1,
                         -beta,
                         -alpha,
-                        1,
+                        np.int64(1),
                         generation,
                         tt_keys,
                         tt_scores,
@@ -1338,7 +1498,7 @@ def _root_search(
 
 
 def _encode_position(board: chess.Board) -> tuple[np.ndarray, int, int, int, int, int, int]:
-    encoded = np.zeros(128, dtype=np.int8)
+    encoded = np.zeros(NN_BOARD_SIZE, dtype=np.int32)
     white_king = -1
     black_king = -1
     for square, piece in board.piece_map().items():
@@ -1458,9 +1618,118 @@ def _time_limits(time_left_ms: int) -> tuple[float, float]:
     elif remaining < 5.0:
         soft = 0.045 + remaining * 0.05
     else:
-        soft = min(4.5, 0.10 + remaining / 34.0)
-    hard = min(max(0.008, remaining - 0.07), soft * 1.65)
+        soft = min(6.0, 0.10 + remaining / 29.0)
+    hard = min(max(0.008, remaining - 0.07), soft * 1.60)
     return soft, max(soft, hard)
+
+
+def _preserve_kingside_cover(board: chess.Board, move: chess.Move) -> chess.Move:
+    """Prefer the central pawn when either home pawn can make the same recapture."""
+    piece = board.piece_at(move.from_square)
+    if (
+        piece is None
+        or piece.piece_type != chess.PAWN
+        or not board.is_capture(move)
+        or not board.has_kingside_castling_rights(piece.color)
+    ):
+        return move
+    home_rank = 1 if piece.color == chess.WHITE else 6
+    if (
+        chess.square_rank(move.from_square) != home_rank
+        or chess.square_file(move.from_square) != 6
+        or board.king(piece.color) != chess.square(4, 0 if piece.color == chess.WHITE else 7)
+    ):
+        return move
+    central_origin = chess.square(4, home_rank)
+    alternative = chess.Move(central_origin, move.to_square, promotion=move.promotion)
+    central_piece = board.piece_at(central_origin)
+    if (
+        central_piece is not None
+        and central_piece.piece_type == chess.PAWN
+        and central_piece.color == piece.color
+        and alternative in board.legal_moves
+    ):
+        return alternative
+    return move
+
+
+def _best_capture_gain(board: chess.Board, destination: chess.Square) -> int:
+    """Return the best legal exchange gain available on one square."""
+    captured_type = board.piece_type_at(destination)
+    if captured_type is None:
+        return 0
+    captured_value = int(MG_VALUE[captured_type])
+    best = 0
+    replies = [
+        reply
+        for reply in board.legal_moves
+        if reply.to_square == destination and board.is_capture(reply)
+    ]
+    for reply in replies:
+        board.push(reply)
+        try:
+            gain = captured_value - _best_capture_gain(board, destination)
+        finally:
+            board.pop()
+        best = max(best, gain)
+    return best
+
+
+def _immediate_exchange_loss(board: chess.Board, move: chess.Move) -> int:
+    """Return a move's material loss under optimal captures on its destination."""
+    piece = board.piece_at(move.from_square)
+    if piece is None or piece.piece_type == chess.KING or board.gives_check(move):
+        return 0
+    captured_type = (
+        chess.PAWN if board.is_en_passant(move) else board.piece_type_at(move.to_square) or 0
+    )
+    captured_value = int(MG_VALUE[captured_type])
+    board.push(move)
+    try:
+        reply_gain = _best_capture_gain(board, move.to_square)
+    finally:
+        board.pop()
+    return max(0, reply_gain - captured_value)
+
+
+def _unsafe_root_exchange(board: chess.Board, move: chess.Move) -> bool:
+    """Limit the safety override to the loss patterns observed in rated games."""
+    piece = board.piece_at(move.from_square)
+    if piece is None:
+        return False
+    loss = _immediate_exchange_loss(board, move)
+    if piece.piece_type == chess.QUEEN:
+        return loss >= 300
+    captured_type = (
+        chess.PAWN if board.is_en_passant(move) else board.piece_type_at(move.to_square)
+    )
+    return (
+        piece.piece_type in (chess.KNIGHT, chess.BISHOP)
+        and captured_type == chess.PAWN
+        and loss >= 120
+    )
+
+
+def _static_root_score(board: chess.Board, move: chess.Move) -> int:
+    board.push(move)
+    try:
+        encoded, side, castling, ep_square, halfmove, king_square, opponent_king = (
+            _encode_position(board)
+        )
+        del castling, ep_square, halfmove
+        white_king = king_square if side == WHITE else opponent_king
+        black_king = opponent_king if side == WHITE else king_square
+        return -int(_evaluate(encoded, side, white_king, black_king))
+    finally:
+        board.pop()
+
+
+def _postprocess_candidate(board: chess.Board, candidate: chess.Move) -> chess.Move:
+    candidate = _preserve_kingside_cover(board, candidate)
+    if not _unsafe_root_exchange(board, candidate):
+        return candidate
+    safe = [move for move in board.legal_moves if _immediate_exchange_loss(board, move) < 120]
+    return max(safe, key=lambda move: _static_root_score(board, move), default=candidate)
 
 
 def choose_move(fen: str, time_left_ms: int) -> str:
@@ -1472,6 +1741,9 @@ def choose_move(fen: str, time_left_ms: int) -> str:
         return "0000"
     if len(legal) == 1:
         return legal[0].uci()
+    if time_left_ms <= 80:
+        # Below one deadline-check interval, returning promptly matters most.
+        return max(legal, key=lambda move: int(board.is_capture(move))).uci()
 
     encoded, side, castling, ep_square, halfmove, king_square, opponent_king = _encode_position(
         board
@@ -1486,6 +1758,7 @@ def choose_move(fen: str, time_left_ms: int) -> str:
     soft_seconds, hard_seconds = _time_limits(time_left_ms)
     soft_deadline = start + soft_seconds
     hard_deadline = start + hard_seconds
+    _nodes[2] = int(hard_deadline * 1_000_000_000)
     best_move = 0
     best_score = 0
     measured_nps = 250_000.0
@@ -1496,11 +1769,11 @@ def choose_move(fen: str, time_left_ms: int) -> str:
         remaining_hard = hard_deadline - now
         if remaining_hard <= 0.002:
             break
+        # Save clock when the next iteration is unlikely to finish. A real deadline
+        # prevents a flag, but repeatedly aborting a deep iteration still wastes time.
         if depth > 1 and previous_elapsed * 2.3 >= remaining_hard:
             break
-        node_limit = max(2_000, int(measured_nps * remaining_hard * 0.70))
-        if depth <= 2:
-            node_limit = max(node_limit, 100_000)
+        node_limit = max(1_024, int(measured_nps * remaining_hard * 2.0))
 
         window = 55 if depth >= 3 else INF
         alpha = max(-INF, best_score - window)
@@ -1550,7 +1823,7 @@ def choose_move(fen: str, time_left_ms: int) -> str:
             if remaining_hard <= 0.002:
                 completed = False
                 break
-            node_limit = max(2_000, int(measured_nps * remaining_hard * 0.65))
+            node_limit = max(1_024, int(measured_nps * remaining_hard * 2.0))
 
         previous_elapsed = time.perf_counter() - iteration_started
         if previous_elapsed > 0.001 and iteration_nodes > 0:
@@ -1561,9 +1834,12 @@ def choose_move(fen: str, time_left_ms: int) -> str:
         if time.perf_counter() >= soft_deadline:
             break
 
+    _nodes[2] = 0
     candidate = _decode_move(best_move) if best_move else legal[0]
     if candidate not in board.legal_moves:
         return legal[0].uci()
+    # The search already compared the legal alternatives. Replacing its result
+    # with a static exchange guess can discard winning sacrifices or forced mates.
     return candidate.uci()
 
 
@@ -1574,6 +1850,7 @@ def reset_for_test() -> None:
     _tt_ages.fill(0)
     _history.fill(0)
     _killers.fill(0)
+    _nodes[2] = 0
 
 
 # Compile the complete recursive path during the platform's import budget, not on move one.

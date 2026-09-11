@@ -1,12 +1,15 @@
-"""A time-safe classical chess engine for the AI Chessathon.
+"""A chess engine with original trained neural evaluation for AI Chessathon.
 
 The engine is deliberately self-contained and readable. Its strength comes from iterative
 deepening alpha-beta search, strong move ordering, a persistent transposition table, quiescence
-search, and a tapered handcrafted evaluation. It does not call or contain a third-party engine.
+search, and a trained sparse neural correction to a tapered handcrafted evaluation. Permitted
+opening preparation and covered Syzygy endings supplement the search. No third-party engine
+or published network is bundled or called.
 """
 
 from __future__ import annotations
 
+import sys
 import time
 from collections.abc import Callable, Hashable
 from typing import NamedTuple
@@ -19,8 +22,9 @@ from opening import choose_opening_move
 _fast_choose_move: Callable[[str, int], str] | None
 try:
     from fast_engine import choose_move as _fast_choose_move
-except Exception:  # Keep a legal classical fallback if JIT initialization ever fails.
+except Exception as error:  # Keep a legal fallback and expose initialization failures in logs.
     _fast_choose_move = None
+    print(f"Compiled search initialization failed: {error!r}", file=sys.stderr)
 
 INF = 40_000
 MATE = 32_000

@@ -1,6 +1,9 @@
 .venv/
+.venv312/
 __pycache__/
 .mypy_cache/
 .ruff_cache/
 submission.zip
+submission-v3.zip
+submission-v3.1.zip
 *.pgn

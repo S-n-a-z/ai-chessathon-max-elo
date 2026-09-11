@@ -27,6 +27,9 @@ dev = ["mypy>=1.18", "ruff>=0.14"]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+# Frozen competitors and rejected experiment snapshots are not release source.
+# The selected release directory is checked explicitly before promotion.
+extend-exclude = ["games/revamp"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "UP", "B", "SIM", "RUF"]

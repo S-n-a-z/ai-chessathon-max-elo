@@ -1,40 +1,29 @@
-# AI Chessathon: maximum-Elo engine
+# BlockShark — AI Chessathon v3.1
 
-An original, self-contained chess engine built for the
-[AI Chessathon](https://aichessathon.com). The current engine combines:
+An original Numba chess engine with a neural evaluator trained from scratch, opening
+preparation and Syzygy endgame coverage. The v3.1 update removes duplicate recursive
+compilation while preserving search decisions and the trained network.
 
-- iterative deepening with aspiration windows;
-- principal-variation alpha-beta search;
-- quiescence search for tactically stable leaf positions;
-- transposition-table, killer-move, history, and MVV-LVA move ordering;
-- null-move pruning, razoring, reverse futility pruning, and late-move reductions;
-- a tapered middlegame/endgame evaluation covering material, mobility, pawn structure,
-  passed pawns, bishop pair, rook files, king safety, and tempo;
-- clock-aware hard deadlines with a legal fallback move;
-- a 4,694-position, Stockfish-labelled opening book restricted to genuine opening positions;
-- complete three- and four-piece Syzygy WDL/DTZ tablebases for perfect covered endings.
+Upload [submission-v3.1.zip](https://github.com/S-n-a-z/ai-chessathon-max-elo/releases/download/v3.1/submission-v3.1.zip) as-is. The archive is 43,917,280 bytes
+uncompressed. Its checksum and file audit are in [submission-v3.1.audit.json](submission-v3.1.audit.json).
 
-`fast_engine.py` contains an original 0x88 board, legal move generator, evaluation, and recursive
-search compiled by Numba. `agent.py` provides the required entry point and retains a readable
-pure-Python fallback. The submission does not bundle, invoke, port, or translate Stockfish or
-another third-party engine.
+The completed 24-game full-clock comparison against the previous submission scored
+**16 wins, 4 draws and 4 losses (75%)**, with no startup failures, flags, crashes or illegal
+moves. Opening starts scored +14 =1 -1; unbooked middlegames scored +2 =3 -3. The aggregate
+improvement is driven by opening preparation, and the small unbooked sample does not establish
+a middlegame improvement. These local public-opening tests do not guarantee a competition win.
 
-The compiled search visits roughly fifteen times as many nodes per move as the initial
-python-chess search in local fixed-time measurements. Smoke tests scored +2 =0 -0 against the
-supplied minimax baseline and +2 =0 -0 against the previous pure-Python engine. In the latest
-eight-game spot check against Stockfish 18's 2200-Elo limited mode, played games scored +2 =1 -4;
-the remaining game ended when Stockfish flagged. The agent completed every game without a flag,
-illegal move, or crash. These are regression checks, not statistically meaningful rating
-estimates or evidence of Stockfish-equivalent strength.
+All 25 regression tests and six repeated parallel cold starts passed. Read:
 
-A small evaluator trained from 30,000 locally generated Stockfish-labelled positions was also
-tested. It lost both direct A/B games against the handcrafted evaluator, so its weights were
-removed from the submission. Only measured improvements are kept.
+- [Release results and PGNs](docs/releases/v3.1/README.md)
+- [Startup fix](STARTUP_FIX.md)
+- [Model improvement handover](MODEL_IMPROVEMENT_HANDOVER.md)
+- [Training provenance](weights/NNUE.md)
 
-The opening book and endgame tables are data types expressly permitted by the competition. The
-book positions come from the CC0 Lichess opening dataset and were labelled offline; the submitted
-agent neither includes nor invokes Stockfish. Normal middlegame decisions still come entirely
-from the original search and evaluation in this repository.
+Large training caches and experimental snapshots referenced by the handover remain local.
+To recreate the frozen current runtime on another machine, extract the versioned submission
+zip into a new directory. The original classical evaluator used for residual labels is retained
+at `games/revamp/baseline/fast_engine.py`.
 
 ## Quick start
 
@@ -45,7 +34,7 @@ make setup
 make play
 ```
 
-That plays the engine against a baseline over a full 120 s + 0.5 s game and prints the result.
+That plays the engine against a baseline using the live 120 s + 0.5 s clock and prints the result.
 Run `make zip` to create `submission.zip` with the Python runtime modules at its root and the
 permitted knowledge data under `weights/`.
 
@@ -98,7 +87,7 @@ opening.py           legal lookup for the shallow opening book
 endgame.py           WDL/DTZ-optimal play in covered Syzygy endings
 baselines/           random, greedy, minimax, numba; each is a directory with an agent.py
 harness/runner.py    the process the platform runs your agent in
-harness/referee.py   the clock, legality, draw and adjudication rules
+harness/referee.py   local referee (its legacy ply-cap adjudication differs from the live rules)
 harness/rules.py     the event constants the harness enforces
 harness/sandbox.py   the one process, spoken to as the platform speaks to a container
 harness/play.py      one game between two agent directories
@@ -107,15 +96,17 @@ harness/package.py   builds submission.zip with agent.py at the root
 docs/IDEAS.md        where the strength actually comes from
 tools/               reproducible benchmarking and evaluator-training utilities
 tests/               legality, perft, clock, mate, and protocol regression tests
-weights/             opening-book data and three/four-piece Syzygy tables
+weights/             trained neural evaluator, opening book and Syzygy tables
 ```
 
 Local games start from the normal position unless you pass `--fen`. Rated games start from
 curated neutral positions.
 
-The harness is here so your games are honest, not so you can pre-validate an upload. Acceptance
-happens on the platform, and the validation log on your dashboard is the authority on it.
+The harness is here for local regression testing, not to pre-validate an upload. It matches the
+agent API and clock, but its legacy 300-ply material adjudication currently differs from the live
+600-ply draw cap. Acceptance and match behaviour on the platform are authoritative.
 
 ## The rules
 
-[aichessathon.com/docs](https://aichessathon.com/docs) is canonical and may change.
+[aichessathon.com/docs](https://aichessathon.com/docs) is canonical and changes. Read it before
+you upload.

@@ -1,0 +1,2 @@
+# Residual training verifies this frozen evaluator's byte hash on every platform.
+games/revamp/baseline/fast_engine.py text eol=lf
