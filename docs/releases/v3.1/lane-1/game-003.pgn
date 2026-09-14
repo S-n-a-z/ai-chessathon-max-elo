@@ -1,0 +1,13 @@
+[Event "?"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "candidate"]
+[Black "baseline"]
+[Result "1-0"]
+[FEN "r1bqr1k1/pp3p1p/3n2pb/1R2P3/8/5N2/P3BPPP/3Q1RK1 w - - 0 21"]
+[SetUp "1"]
+[TimeControl "120+0.5"]
+[Termination "checkmate"]
+
+21. exd6 { elapsed_ms=3313.32 remaining_ms=117186.7 } 21... a6 { elapsed_ms=5214.37 remaining_ms=115285.6 } 22. Re5 { elapsed_ms=6626.52 remaining_ms=111060.2 } 22... Rxe5 { elapsed_ms=4279.47 remaining_ms=111506.2 } 23. Nxe5 { elapsed_ms=3457.05 remaining_ms=108103.1 } 23... Bf4 { elapsed_ms=3897.86 remaining_ms=108108.3 } 24. Nxf7 { elapsed_ms=5542.65 remaining_ms=103060.5 } 24... Kxf7 { elapsed_ms=2485.99 remaining_ms=106122.3 } 25. Qd5+ { elapsed_ms=4395.37 remaining_ms=99165.1 } 25... Kg7 { elapsed_ms=5136.17 remaining_ms=101486.1 } 26. Rd1 { elapsed_ms=2690.82 remaining_ms=96974.3 } 26... Bxh2+ { elapsed_ms=3623.70 remaining_ms=98362.4 } 27. Kxh2 { elapsed_ms=2967.50 remaining_ms=94506.8 } 27... Rb8 { elapsed_ms=4506.29 remaining_ms=94356.1 } 28. Rc1 { elapsed_ms=3637.01 remaining_ms=91369.8 } 28... h5 { elapsed_ms=2405.22 remaining_ms=92450.9 } 29. Rc7+ { elapsed_ms=3934.10 remaining_ms=87935.7 } 29... Kh6 { elapsed_ms=3998.21 remaining_ms=88952.7 } 30. Qd4 { elapsed_ms=3768.82 remaining_ms=84666.8 } 30... Bd7 { elapsed_ms=3933.80 remaining_ms=85518.9 } 31. Qe3+ { elapsed_ms=4833.95 remaining_ms=80332.9 } 31... Kg7 { elapsed_ms=3388.05 remaining_ms=82630.9 } 32. Qh3 { elapsed_ms=4593.86 remaining_ms=76239.0 } 32... Kh8 { elapsed_ms=2293.38 remaining_ms=80837.5 } 33. Rxd7 { elapsed_ms=3829.09 remaining_ms=72909.9 } 33... Qf6 { elapsed_ms=2962.06 remaining_ms=78375.4 } 34. Qe3 { elapsed_ms=1821.10 remaining_ms=71588.8 } 34... g5 { elapsed_ms=2822.52 remaining_ms=76052.9 } 35. Qd3 { elapsed_ms=3577.80 remaining_ms=68511.0 } 35... Kg8 { elapsed_ms=3922.57 remaining_ms=72630.3 } 36. Qh7+ { elapsed_ms=196.04 remaining_ms=68815.0 } 36... Kf8 { elapsed_ms=0.45 remaining_ms=73129.9 } 37. Bc4 { elapsed_ms=1.97 remaining_ms=69313.0 } 37... Qf4+ { elapsed_ms=677.31 remaining_ms=72952.6 } 38. Kg1 { elapsed_ms=0.86 remaining_ms=69812.2 } 38... Qc1+ { elapsed_ms=0.78 remaining_ms=73451.8 } 39. Bf1 { elapsed_ms=0.46 remaining_ms=70311.7 } 39... Qxf1+ { elapsed_ms=1.53 remaining_ms=73950.3 } 40. Kxf1 { elapsed_ms=0.58 remaining_ms=70811.1 } 40... h4 { elapsed_ms=0.74 remaining_ms=74449.5 } 41. Qh8# { elapsed_ms=0.51 remaining_ms=71310.6 } 1-0
