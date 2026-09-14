@@ -1,0 +1,44 @@
+{
+  "starts": [
+    {
+      "fen": "5rk1/4qppp/3pb3/p3p3/1r1nP3/1P1BN3/P4PPP/1R1Q1RK1 w - - 3 21",
+      "source": "games\\revamp\\latest-public\\round-95-draw.pgn",
+      "selection_teacher_cp": -6
+    },
+    {
+      "fen": "r1bqr1k1/pp3p1p/3n2pb/1R2P3/8/5N2/P3BPPP/3Q1RK1 w - - 0 21",
+      "source": "games\\revamp\\latest-public\\round-92-loss.pgn",
+      "selection_teacher_cp": -27
+    },
+    {
+      "fen": "r2q1rk1/5p2/b2p1n1p/P3p1p1/B1PnP3/P5B1/5PPP/RN1Q1RK1 w - - 1 21",
+      "source": "games\\revamp\\latest-public\\round-91-win.pgn",
+      "selection_teacher_cp": -45
+    },
+    {
+      "fen": "r6r/1pq1b1k1/2n2npp/3p4/4p2N/PQN1B3/2P2PPP/R2R2K1 w - - 5 21",
+      "source": "games\\revamp\\latest-public\\round-89-win.pgn",
+      "selection_teacher_cp": -5
+    },
+    {
+      "fen": "N4rk1/5ppp/p1q2b2/np2p3/8/1P2QN2/1Pb2PPP/3RR1K1 w - - 0 21",
+      "source": "games\\revamp\\latest-public\\round-88-win.pgn",
+      "selection_teacher_cp": 21
+    },
+    {
+      "fen": "8/1p1k1ppp/3b1n2/3p4/3N4/2P3P1/rP1N1P1P/4RK2 w - - 1 21",
+      "source": "games\\revamp\\latest-public\\round-87-loss.pgn",
+      "selection_teacher_cp": 12
+    },
+    {
+      "fen": "r1br2k1/1p4pp/1b2pq2/2n2p2/p1PN1P2/1NQ1PBP1/P6P/3R1RK1 w - - 0 21",
+      "source": "games\\revamp\\latest-public\\round-81-draw.pgn",
+      "selection_teacher_cp": 77
+    },
+    {
+      "fen": "r1b2rk1/1p3p1p/3p1np1/p1q2P2/4P3/P2Q3P/1PP1NRB1/R5K1 w - - 0 21",
+      "source": "games\\revamp\\latest-public\\round-79-draw.pgn",
+      "selection_teacher_cp": 68
+    }
+  ]
+}
