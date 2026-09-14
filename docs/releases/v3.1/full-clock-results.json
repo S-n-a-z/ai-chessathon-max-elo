@@ -1,0 +1,682 @@
+{
+  "state": "complete",
+  "updated_utc": "2026-09-11T01:07:21.629777+00:00",
+  "planned_games": 24,
+  "lane_exit_codes": [
+    0,
+    0
+  ],
+  "summary": {
+    "all": {
+      "games": 24,
+      "wins": 16,
+      "draws": 4,
+      "losses": 4,
+      "score": 0.75
+    },
+    "opening": {
+      "games": 16,
+      "wins": 14,
+      "draws": 1,
+      "losses": 1,
+      "score": 0.90625
+    },
+    "unbooked": {
+      "games": 8,
+      "wins": 2,
+      "draws": 3,
+      "losses": 3,
+      "score": 0.4375
+    }
+  },
+  "games": [
+    {
+      "game": 1,
+      "fen": "r1bqkb1r/1p3ppp/p1np1n2/4p3/P3P3/N1N5/1PP2PPP/R1BQKB1R b KQkq - 1 8",
+      "candidate_white": true,
+      "result": "1-0",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 134,
+      "elapsed_ms": [
+        124857.99399999087,
+        122609.72290000063
+      ],
+      "move_counts": [
+        67,
+        67
+      ],
+      "init_seconds": [
+        44.435608100000536,
+        57.6288747000217
+      ],
+      "remaining_ms": {
+        "white": 28642.006000009133,
+        "black": 30890.277099999366
+      },
+      "lane": 0,
+      "cohort": "opening"
+    },
+    {
+      "game": 2,
+      "fen": "r1bqkb1r/1p3ppp/p1np1n2/4p3/P3P3/N1N5/1PP2PPP/R1BQKB1R b KQkq - 1 8",
+      "candidate_white": false,
+      "result": "0-1",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 155,
+      "elapsed_ms": [
+        139800.16229994362,
+        134159.84370018123
+      ],
+      "move_counts": [
+        78,
+        77
+      ],
+      "init_seconds": [
+        37.39119309998932,
+        45.00195030000759
+      ],
+      "remaining_ms": {
+        "white": 24340.156299818773,
+        "black": 19199.837700056378
+      },
+      "lane": 0,
+      "cohort": "opening"
+    },
+    {
+      "game": 3,
+      "fen": "5rk1/4qppp/3pb3/p3p3/1r1nP3/1P1BN3/P4PPP/1R1Q1RK1 w - - 3 21",
+      "candidate_white": true,
+      "result": "1/2-1/2",
+      "termination": "threefold_repetition",
+      "candidate_points": 0.5,
+      "plies": 85,
+      "elapsed_ms": [
+        97085.97200002987,
+        87437.3876999307
+      ],
+      "move_counts": [
+        43,
+        42
+      ],
+      "init_seconds": [
+        44.99273399999947,
+        43.12700770000811
+      ],
+      "remaining_ms": {
+        "white": 44414.02799997013,
+        "black": 53562.612300069304
+      },
+      "lane": 0,
+      "cohort": "unbooked"
+    },
+    {
+      "game": 4,
+      "fen": "5rk1/4qppp/3pb3/p3p3/1r1nP3/1P1BN3/P4PPP/1R1Q1RK1 w - - 3 21",
+      "candidate_white": false,
+      "result": "1/2-1/2",
+      "termination": "threefold_repetition",
+      "candidate_points": 0.5,
+      "plies": 130,
+      "elapsed_ms": [
+        126501.62559986347,
+        126477.17119997833
+      ],
+      "move_counts": [
+        65,
+        65
+      ],
+      "init_seconds": [
+        30.33993200000259,
+        41.496532000019215
+      ],
+      "remaining_ms": {
+        "white": 26022.82880002167,
+        "black": 25998.374400136527
+      },
+      "lane": 0,
+      "cohort": "unbooked"
+    },
+    {
+      "game": 5,
+      "fen": "r1bqkb1r/pp3ppp/2n1pn2/2pp4/3P4/2P1P1B1/PP1N1PPP/R2QKBNR b KQkq - 1 6",
+      "candidate_white": true,
+      "result": "0-1",
+      "termination": "checkmate",
+      "candidate_points": 0.0,
+      "plies": 119,
+      "elapsed_ms": [
+        124900.81869999995,
+        124272.35099999234
+      ],
+      "move_counts": [
+        59,
+        60
+      ],
+      "init_seconds": [
+        38.64418159998604,
+        44.00525079999352
+      ],
+      "remaining_ms": {
+        "white": 24599.181300000055,
+        "black": 25727.64900000766
+      },
+      "lane": 0,
+      "cohort": "opening"
+    },
+    {
+      "game": 6,
+      "fen": "r1bqkb1r/pp3ppp/2n1pn2/2pp4/3P4/2P1P1B1/PP1N1PPP/R2QKBNR b KQkq - 1 6",
+      "candidate_white": false,
+      "result": "0-1",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 81,
+      "elapsed_ms": [
+        103164.30820006644,
+        101605.34979996737
+      ],
+      "move_counts": [
+        41,
+        40
+      ],
+      "init_seconds": [
+        33.64578670001356,
+        45.939186500007054
+      ],
+      "remaining_ms": {
+        "white": 38394.65020003263,
+        "black": 37335.69179993356
+      },
+      "lane": 0,
+      "cohort": "opening"
+    },
+    {
+      "game": 7,
+      "fen": "rn1qkbnr/pp3ppp/2p1p1b1/8/3P3P/4B1N1/PPP2PP1/R2QKBNR b KQkq - 0 7",
+      "candidate_white": true,
+      "result": "1-0",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 80,
+      "elapsed_ms": [
+        93065.78289991012,
+        99098.54189993348
+      ],
+      "move_counts": [
+        40,
+        40
+      ],
+      "init_seconds": [
+        31.458926399995107,
+        37.57775250001578
+      ],
+      "remaining_ms": {
+        "white": 46934.21710008988,
+        "black": 40901.45810006652
+      },
+      "lane": 0,
+      "cohort": "opening"
+    },
+    {
+      "game": 8,
+      "fen": "rn1qkbnr/pp3ppp/2p1p1b1/8/3P3P/4B1N1/PPP2PP1/R2QKBNR b KQkq - 0 7",
+      "candidate_white": false,
+      "result": "0-1",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 59,
+      "elapsed_ms": [
+        72335.6564999849,
+        64868.43759994372
+      ],
+      "move_counts": [
+        30,
+        29
+      ],
+      "init_seconds": [
+        31.605098300002282,
+        33.57521660000202
+      ],
+      "remaining_ms": {
+        "white": 69631.56240005628,
+        "black": 62664.34350001509
+      },
+      "lane": 0,
+      "cohort": "opening"
+    },
+    {
+      "game": 9,
+      "fen": "r2q1rk1/5p2/b2p1n1p/P3p1p1/B1PnP3/P5B1/5PPP/RN1Q1RK1 w - - 1 21",
+      "candidate_white": true,
+      "result": "1/2-1/2",
+      "termination": "threefold_repetition",
+      "candidate_points": 0.5,
+      "plies": 80,
+      "elapsed_ms": [
+        108828.54290003888,
+        105364.80520004989
+      ],
+      "move_counts": [
+        40,
+        40
+      ],
+      "init_seconds": [
+        36.20443070001784,
+        49.231440399977146
+      ],
+      "remaining_ms": {
+        "white": 31171.457099961117,
+        "black": 34635.19479995011
+      },
+      "lane": 0,
+      "cohort": "unbooked"
+    },
+    {
+      "game": 10,
+      "fen": "r2q1rk1/5p2/b2p1n1p/P3p1p1/B1PnP3/P5B1/5PPP/RN1Q1RK1 w - - 1 21",
+      "candidate_white": false,
+      "result": "1-0",
+      "termination": "checkmate",
+      "candidate_points": 0.0,
+      "plies": 89,
+      "elapsed_ms": [
+        105675.52350004553,
+        100185.4650999594
+      ],
+      "move_counts": [
+        44,
+        45
+      ],
+      "init_seconds": [
+        35.1864995000069,
+        52.81583849998424
+      ],
+      "remaining_ms": {
+        "white": 42314.5349000406,
+        "black": 36324.47649995447
+      },
+      "lane": 0,
+      "cohort": "unbooked"
+    },
+    {
+      "game": 11,
+      "fen": "r1bqkb1r/1p2pppp/p1np4/8/4P1n1/1NN5/PPPB1PPP/R2QKB1R b KQkq - 3 8",
+      "candidate_white": true,
+      "result": "1-0",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 52,
+      "elapsed_ms": [
+        64180.11610000394,
+        75953.35350005189
+      ],
+      "move_counts": [
+        26,
+        26
+      ],
+      "init_seconds": [
+        29.212321800005157,
+        35.22534850001102
+      ],
+      "remaining_ms": {
+        "white": 68819.88389999606,
+        "black": 57046.64649994811
+      },
+      "lane": 0,
+      "cohort": "opening"
+    },
+    {
+      "game": 12,
+      "fen": "r1bqkb1r/1p2pppp/p1np4/8/4P1n1/1NN5/PPPB1PPP/R2QKB1R b KQkq - 3 8",
+      "candidate_white": false,
+      "result": "0-1",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 77,
+      "elapsed_ms": [
+        97627.629200113,
+        94941.03579997318
+      ],
+      "move_counts": [
+        39,
+        38
+      ],
+      "init_seconds": [
+        28.671142200008035,
+        38.69140250000055
+      ],
+      "remaining_ms": {
+        "white": 44058.96420002682,
+        "black": 41872.370799886994
+      },
+      "lane": 0,
+      "cohort": "opening"
+    },
+    {
+      "game": 1,
+      "fen": "r1bqkb1r/pp2pppp/2np1n2/8/4P3/1NN5/PPP2PPP/R1BQKB1R b KQkq - 4 6",
+      "candidate_white": true,
+      "result": "1-0",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 92,
+      "elapsed_ms": [
+        104908.62840006594,
+        107491.84549995698
+      ],
+      "move_counts": [
+        46,
+        46
+      ],
+      "init_seconds": [
+        40.89168620001874,
+        54.985648800007766
+      ],
+      "remaining_ms": {
+        "white": 38091.371599934064,
+        "black": 35508.15450004302
+      },
+      "lane": 1,
+      "cohort": "opening"
+    },
+    {
+      "game": 2,
+      "fen": "r1bqkb1r/pp2pppp/2np1n2/8/4P3/1NN5/PPP2PPP/R1BQKB1R b KQkq - 4 6",
+      "candidate_white": false,
+      "result": "0-1",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 55,
+      "elapsed_ms": [
+        84660.9032000415,
+        80970.02649999922
+      ],
+      "move_counts": [
+        28,
+        27
+      ],
+      "init_seconds": [
+        31.396025900001405,
+        41.85249930000282
+      ],
+      "remaining_ms": {
+        "white": 52529.97350000078,
+        "black": 49339.0967999585
+      },
+      "lane": 1,
+      "cohort": "opening"
+    },
+    {
+      "game": 3,
+      "fen": "r1bqr1k1/pp3p1p/3n2pb/1R2P3/8/5N2/P3BPPP/3Q1RK1 w - - 0 21",
+      "candidate_white": true,
+      "result": "1-0",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 41,
+      "elapsed_ms": [
+        59189.38810002874,
+        55550.47909991117
+      ],
+      "move_counts": [
+        21,
+        20
+      ],
+      "init_seconds": [
+        32.06597010002588,
+        38.719666599994525
+      ],
+      "remaining_ms": {
+        "white": 71310.61189997126,
+        "black": 74449.52090008883
+      },
+      "lane": 1,
+      "cohort": "unbooked"
+    },
+    {
+      "game": 4,
+      "fen": "r1bqr1k1/pp3p1p/3n2pb/1R2P3/8/5N2/P3BPPP/3Q1RK1 w - - 0 21",
+      "candidate_white": false,
+      "result": "0-1",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 102,
+      "elapsed_ms": [
+        111477.63509990182,
+        105372.2068000061
+      ],
+      "move_counts": [
+        51,
+        51
+      ],
+      "init_seconds": [
+        35.649314199981745,
+        39.70152439997764
+      ],
+      "remaining_ms": {
+        "white": 40127.7931999939,
+        "black": 34022.36490009818
+      },
+      "lane": 1,
+      "cohort": "unbooked"
+    },
+    {
+      "game": 5,
+      "fen": "r2qkb1r/pp3ppp/2npbn2/3Np3/4P3/1N3P2/PPP3PP/R1BQKB1R b KQkq - 3 8",
+      "candidate_white": true,
+      "result": "1-0",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 120,
+      "elapsed_ms": [
+        121677.75140004233,
+        121847.20899999957
+      ],
+      "move_counts": [
+        60,
+        60
+      ],
+      "init_seconds": [
+        33.92076249999809,
+        38.47760759998346
+      ],
+      "remaining_ms": {
+        "white": 28322.248599957675,
+        "black": 28152.791000000434
+      },
+      "lane": 1,
+      "cohort": "opening"
+    },
+    {
+      "game": 6,
+      "fen": "r2qkb1r/pp3ppp/2npbn2/3Np3/4P3/1N3P2/PPP3PP/R1BQKB1R b KQkq - 3 8",
+      "candidate_white": false,
+      "result": "0-1",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 85,
+      "elapsed_ms": [
+        101140.3046999767,
+        97737.34050014173
+      ],
+      "move_counts": [
+        43,
+        42
+      ],
+      "init_seconds": [
+        33.02680540000438,
+        43.77933260001009
+      ],
+      "remaining_ms": {
+        "white": 43262.65949985827,
+        "black": 40359.695300023304
+      },
+      "lane": 1,
+      "cohort": "opening"
+    },
+    {
+      "game": 7,
+      "fen": "r1bq1rk1/ppp2pbp/n2p1np1/4p3/2PPP3/2NQ1N2/PP2BPPP/R1B1K2R w KQ - 2 8",
+      "candidate_white": true,
+      "result": "1-0",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 53,
+      "elapsed_ms": [
+        70197.4350999808,
+        72696.50389999151
+      ],
+      "move_counts": [
+        27,
+        26
+      ],
+      "init_seconds": [
+        36.56475770001998,
+        38.18165159999626
+      ],
+      "remaining_ms": {
+        "white": 63302.564900019206,
+        "black": 60303.49610000849
+      },
+      "lane": 1,
+      "cohort": "opening"
+    },
+    {
+      "game": 8,
+      "fen": "r1bq1rk1/ppp2pbp/n2p1np1/4p3/2PPP3/2NQ1N2/PP2BPPP/R1B1K2R w KQ - 2 8",
+      "candidate_white": false,
+      "result": "0-1",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 112,
+      "elapsed_ms": [
+        120026.07049990911,
+        117509.96360008139
+      ],
+      "move_counts": [
+        56,
+        56
+      ],
+      "init_seconds": [
+        28.423605100018904,
+        36.9939471000107
+      ],
+      "remaining_ms": {
+        "white": 30490.03639991861,
+        "black": 27973.92950009089
+      },
+      "lane": 1,
+      "cohort": "opening"
+    },
+    {
+      "game": 9,
+      "fen": "r6r/1pq1b1k1/2n2npp/3p4/4p2N/PQN1B3/2P2PPP/R2R2K1 w - - 5 21",
+      "candidate_white": true,
+      "result": "0-1",
+      "termination": "checkmate",
+      "candidate_points": 0.0,
+      "plies": 118,
+      "elapsed_ms": [
+        120915.47479998553,
+        111837.41849986836
+      ],
+      "move_counts": [
+        59,
+        59
+      ],
+      "init_seconds": [
+        33.07867590000387,
+        37.23594569999841
+      ],
+      "remaining_ms": {
+        "white": 28584.52520001447,
+        "black": 37662.58150013164
+      },
+      "lane": 1,
+      "cohort": "unbooked"
+    },
+    {
+      "game": 10,
+      "fen": "r6r/1pq1b1k1/2n2npp/3p4/4p2N/PQN1B3/2P2PPP/R2R2K1 w - - 5 21",
+      "candidate_white": false,
+      "result": "1-0",
+      "termination": "checkmate",
+      "candidate_points": 0.0,
+      "plies": 83,
+      "elapsed_ms": [
+        103665.20349995699,
+        90590.28839995153
+      ],
+      "move_counts": [
+        41,
+        42
+      ],
+      "init_seconds": [
+        39.85730750000221,
+        52.69256799999857
+      ],
+      "remaining_ms": {
+        "white": 50409.71160004847,
+        "black": 36834.79650004301
+      },
+      "lane": 1,
+      "cohort": "unbooked"
+    },
+    {
+      "game": 11,
+      "fen": "rnbqk2r/p3nppp/1p2p3/2ppP3/P2P4/2P2N2/2P2PPP/R1BQKB1R b KQkq - 0 8",
+      "candidate_white": true,
+      "result": "1-0",
+      "termination": "checkmate",
+      "candidate_points": 1.0,
+      "plies": 104,
+      "elapsed_ms": [
+        114445.83240002976,
+        111063.1149999681
+      ],
+      "move_counts": [
+        52,
+        52
+      ],
+      "init_seconds": [
+        38.518547999992734,
+        63.51368889998412
+      ],
+      "remaining_ms": {
+        "white": 31554.167599970242,
+        "black": 34936.88500003191
+      },
+      "lane": 1,
+      "cohort": "opening"
+    },
+    {
+      "game": 12,
+      "fen": "rnbqk2r/p3nppp/1p2p3/2ppP3/P2P4/2P2N2/2P2PPP/R1BQKB1R b KQkq - 0 8",
+      "candidate_white": false,
+      "result": "1/2-1/2",
+      "termination": "threefold_repetition",
+      "candidate_points": 0.5,
+      "plies": 178,
+      "elapsed_ms": [
+        149509.64339994243,
+        147127.76699991082
+      ],
+      "move_counts": [
+        89,
+        89
+      ],
+      "init_seconds": [
+        30.279396700003417,
+        46.38712189998478
+      ],
+      "remaining_ms": {
+        "white": 17372.23300008918,
+        "black": 14990.356600057567
+      },
+      "lane": 1,
+      "cohort": "opening"
+    }
+  ]
+}

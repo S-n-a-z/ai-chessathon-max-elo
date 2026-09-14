@@ -1,0 +1,18 @@
+{
+  "candidate": "C:\\Users\\galac\\OneDrive\\Documents\\EEE Year 2\\other\\AI Chessathon\\games\\revamp\\startup-unified",
+  "python": "3.12.14",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "dependencies": {
+    "numpy": "2.5.2",
+    "numba": "0.67.0",
+    "chess": "1.11.2"
+  },
+  "import_seconds": 42.83812389997183,
+  "local_90_second_import_passed": true,
+  "compiled_search": true,
+  "tests_run": 25,
+  "tests_passed": true,
+  "failures": [],
+  "errors": [],
+  "limitation": "Local OS and CPU differ from platform; upload validation remains authoritative"
+}

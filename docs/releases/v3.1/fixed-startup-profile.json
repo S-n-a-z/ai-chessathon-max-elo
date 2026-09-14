@@ -1,0 +1,223 @@
+{
+  "candidate": "C:\\Users\\galac\\OneDrive\\Documents\\EEE Year 2\\other\\AI Chessathon\\games\\revamp\\startup-unified",
+  "import_seconds": 47.78863959998125,
+  "compiler_hotspots_inclusive": [
+    {
+      "name": "_root_search",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, int64, int64, int64, int64, int64, int64, int64, int64, int64, int64, Array(uint64, 1, 'C', False, aligned=True), Array(int32, 1, 'C', False, aligned=True), Array(int32, 1, 'C', False, aligned=True), Array(int8, 1, 'C', False, aligned=True), Array(int8, 1, 'C', False, aligned=True), Array(uint16, 1, 'C', False, aligned=True), Array(int32, 2, 'C', False, aligned=True), Array(int32, 2, 'C', False, aligned=True), Array(int32, 2, 'C', False, aligned=True), Array(int32, 3, 'C', False, aligned=True), Array(uint64, 1, 'C', False, aligned=True), Array(int64, 1, 'C', False, aligned=True))",
+      "seconds": 45.25385099995765
+    },
+    {
+      "name": "_search",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, int64, int64, int64, int64, int64, int64, int64, int64, int64, Array(uint64, 1, 'C', False, aligned=True), Array(int32, 1, 'C', False, aligned=True), Array(int32, 1, 'C', False, aligned=True), Array(int8, 1, 'C', False, aligned=True), Array(int8, 1, 'C', False, aligned=True), Array(uint16, 1, 'C', False, aligned=True), Array(int32, 2, 'C', False, aligned=True), Array(int32, 2, 'C', False, aligned=True), Array(int32, 2, 'C', False, aligned=True), Array(int32, 3, 'C', False, aligned=True), Array(uint64, 1, 'C', False, aligned=True), Array(int64, 1, 'C', False, aligned=True))",
+      "seconds": 27.37730780011043
+    },
+    {
+      "name": "_quiescence",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, int64, int64, int64, int64, int64, int64, int64, Array(int32, 2, 'C', False, aligned=True), Array(int32, 2, 'C', False, aligned=True), Array(int32, 2, 'C', False, aligned=True), Array(int32, 3, 'C', False, aligned=True), Array(uint64, 1, 'C', False, aligned=True), Array(int64, 1, 'C', False, aligned=True))",
+      "seconds": 15.812348900071811
+    },
+    {
+      "name": "_generate_legal",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, int64, int64, int64, Literal[int](0), Array(int32, 2, 'C', False, aligned=True))",
+      "seconds": 13.382565900043119
+    },
+    {
+      "name": "_generate_pseudo",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, int64, int64, Array(int32, 1, 'C', False, aligned=True), omitted(default=False))",
+      "seconds": 10.477466800046386
+    },
+    {
+      "name": "_evaluate",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, int64)",
+      "seconds": 6.048080600099638
+    },
+    {
+      "name": "_evaluate_classical",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, int64)",
+      "seconds": 2.96702530013863
+    },
+    {
+      "name": "_generate_pseudo",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, int64, int64, Array(int32, 1, 'C', False, aligned=True), bool)",
+      "seconds": 2.8695329999609385
+    },
+    {
+      "name": "_neural_correction",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, int64)",
+      "seconds": 1.5554513999959454
+    },
+    {
+      "name": "_order_moves",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, int64, int64, Array(int32, 2, 'C', False, aligned=True), Array(int32, 2, 'C', False, aligned=True), Array(int32, 2, 'C', False, aligned=True), Array(int32, 3, 'C', False, aligned=True))",
+      "seconds": 1.2545593999675475
+    },
+    {
+      "name": "_is_attacked",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64)",
+      "seconds": 1.1986585000122432
+    },
+    {
+      "name": "_has_legal_move",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, int64, int64, int64, Array(int32, 1, 'C', False, aligned=True))",
+      "seconds": 1.1892071999318432
+    },
+    {
+      "name": "_order_moves",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, Literal[int](0), int64, Array(int32, 2, 'C', False, aligned=True), Array(int32, 2, 'C', False, aligned=True), Array(int32, 2, 'C', False, aligned=True), Array(int32, 3, 'C', False, aligned=True))",
+      "seconds": 0.8994917000236455
+    },
+    {
+      "name": "_is_attacked",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), Literal[int](3), int64)",
+      "seconds": 0.8804111998470034
+    },
+    {
+      "name": "_is_attacked",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), Literal[int](115), int64)",
+      "seconds": 0.8491347999952268
+    },
+    {
+      "name": "_is_attacked",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), Literal[int](118), int64)",
+      "seconds": 0.7795577999786474
+    },
+    {
+      "name": "_is_attacked",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), Literal[int](4), int64)",
+      "seconds": 0.73984639995615
+    },
+    {
+      "name": "_is_attacked",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), Literal[int](6), int64)",
+      "seconds": 0.6762312999344431
+    },
+    {
+      "name": "_is_attacked",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), Literal[int](5), int64)",
+      "seconds": 0.6631589999597054
+    },
+    {
+      "name": "_is_attacked",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), Literal[int](2), int64)",
+      "seconds": 0.6297866000386421
+    },
+    {
+      "name": "_is_attacked",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), Literal[int](114), int64)",
+      "seconds": 0.6107693999656476
+    },
+    {
+      "name": "_is_attacked",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), Literal[int](117), int64)",
+      "seconds": 0.5732142000342719
+    },
+    {
+      "name": "_order_moves",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, int64, Literal[int](0), Array(int32, 2, 'C', False, aligned=True), Array(int32, 2, 'C', False, aligned=True), Array(int32, 2, 'C', False, aligned=True), Array(int32, 3, 'C', False, aligned=True))",
+      "seconds": 0.5479516999912448
+    },
+    {
+      "name": "_make_move",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int32, int64, int64, int64, int64)",
+      "seconds": 0.5276675000204705
+    },
+    {
+      "name": "_is_attacked",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), Literal[int](116), int64)",
+      "seconds": 0.5198749000555836
+    },
+    {
+      "name": "_position_hash",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, int64)",
+      "seconds": 0.46455090001109056
+    },
+    {
+      "name": "_hash_after_move",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), uint64, int32, int64, int32, int64, int64, int64, int64)",
+      "seconds": 0.4021885000402108
+    },
+    {
+      "name": "_mobility",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int64, int64, int32)",
+      "seconds": 0.38683329994091764
+    },
+    {
+      "name": "_insufficient_material",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True),)",
+      "seconds": 0.3244954000983853
+    },
+    {
+      "name": "_undo_move",
+      "signature": "(Array(int32, 1, 'C', False, aligned=True), int32, int64, int32)",
+      "seconds": 0.2905021999613382
+    },
+    {
+      "name": "_is_repeated",
+      "signature": "(Array(uint64, 1, 'C', False, aligned=True), uint64, int64, int64)",
+      "seconds": 0.2492278999707196
+    },
+    {
+      "name": "_out_of_nodes",
+      "signature": "(Array(int64, 1, 'C', False, aligned=True),)",
+      "seconds": 0.24910499999532476
+    }
+  ],
+  "results": [
+    {
+      "fen": "5rk1/4qppp/3pb3/p3p3/1r1nP3/1P1BN3/P4PPP/1R1Q1RK1 w - - 3 21",
+      "move": "b1c1",
+      "score": -53,
+      "nodes": 58417,
+      "completed": true,
+      "seconds": 0.2449590000032913,
+      "nps": 238476.64302685388
+    },
+    {
+      "fen": "r1bqr1k1/pp3p1p/3n2pb/1R2P3/8/5N2/P3BPPP/3Q1RK1 w - - 0 21",
+      "move": "e5d6",
+      "score": -22,
+      "nodes": 28702,
+      "completed": true,
+      "seconds": 0.12024849999579601,
+      "nps": 238689.04810457883
+    },
+    {
+      "fen": "r2q1rk1/5p2/b2p1n1p/P3p1p1/B1PnP3/P5B1/5PPP/RN1Q1RK1 w - - 1 21",
+      "move": "b1d2",
+      "score": 79,
+      "nodes": 23273,
+      "completed": true,
+      "seconds": 0.08738690000609495,
+      "nps": 266321.3822481034
+    },
+    {
+      "fen": "r6r/1pq1b1k1/2n2npp/3p4/4p2N/PQN1B3/2P2PPP/R2R2K1 w - - 5 21",
+      "move": "h4g6",
+      "score": -10,
+      "nodes": 34545,
+      "completed": true,
+      "seconds": 0.12158869998529553,
+      "nps": 284113.5730884345
+    },
+    {
+      "fen": "N4rk1/5ppp/p1q2b2/np2p3/8/1P2QN2/1Pb2PPP/3RR1K1 w - - 0 21",
+      "move": "a8b6",
+      "score": -164,
+      "nodes": 16179,
+      "completed": true,
+      "seconds": 0.05539289998705499,
+      "nps": 292077.1435288808
+    },
+    {
+      "fen": "8/1p1k1ppp/3b1n2/3p4/3N4/2P3P1/rP1N1P1P/4RK2 w - - 1 21",
+      "move": "e1b1",
+      "score": -82,
+      "nodes": 21366,
+      "completed": true,
+      "seconds": 0.06914859998505563,
+      "nps": 308986.7329868951
+    }
+  ],
+  "nps": 261164.4130030209
+}
