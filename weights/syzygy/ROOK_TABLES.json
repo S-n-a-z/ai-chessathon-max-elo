@@ -1,0 +1,56 @@
+[
+  {
+    "file": "KRPvKR.rtbw",
+    "bytes": 16378576,
+    "url": "https://tablebase.lichess.ovh/tables/standard/3-4-5-wdl/KRPvKR.rtbw",
+    "sha256": "1100e6deaee14ca9a56b69441208462c02ef45b3f56daa3d75f687eb5cf12319"
+  },
+  {
+    "file": "KRPvKR.rtbz",
+    "bytes": 13725456,
+    "url": "https://tablebase.lichess.ovh/tables/standard/3-4-5-dtz/KRPvKR.rtbz",
+    "sha256": "184ce33fa4dcfa931f7a3b9955662e166287ec203224ae9681d527d3b8cd9c6f"
+  },
+  {
+    "file": "KQRvKR.rtbw",
+    "bytes": 279824,
+    "url": "https://tablebase.lichess.ovh/tables/standard/3-4-5-wdl/KQRvKR.rtbw",
+    "sha256": "13477ef681468dfb19d09ab8dbeb08d259f9db57a6e5e2c7cdb902880fc2166b"
+  },
+  {
+    "file": "KQRvKR.rtbz",
+    "bytes": 3421968,
+    "url": "https://tablebase.lichess.ovh/tables/standard/3-4-5-dtz/KQRvKR.rtbz",
+    "sha256": "6ed2eba7b9d5b7813a30751a0e1dd3561e499c1ffe76b5de98ea7ad5b006fdbd"
+  },
+  {
+    "file": "KRRvKR.rtbw",
+    "bytes": 334224,
+    "url": "https://tablebase.lichess.ovh/tables/standard/3-4-5-wdl/KRRvKR.rtbw",
+    "sha256": "7897a69c7ad337adc93aa39c9d22dcf1a5e215908437b36d92db5e4bebf9217e"
+  },
+  {
+    "file": "KRBvKR.rtbw",
+    "bytes": 2035280,
+    "url": "https://tablebase.lichess.ovh/tables/standard/3-4-5-wdl/KRBvKR.rtbw",
+    "sha256": "6343cff1ca9d4026aed57ede37ebd29004d11c9d8ec932351b04b4e8018ce8b9"
+  },
+  {
+    "file": "KRBvKR.rtbz",
+    "bytes": 575440,
+    "url": "https://tablebase.lichess.ovh/tables/standard/3-4-5-dtz/KRBvKR.rtbz",
+    "sha256": "e6ee6691bde20eceedd44b26adab5b3328d9ca758153693775b65d3a51ae11cb"
+  },
+  {
+    "file": "KRNvKR.rtbw",
+    "bytes": 1491856,
+    "url": "https://tablebase.lichess.ovh/tables/standard/3-4-5-wdl/KRNvKR.rtbw",
+    "sha256": "163432941d6f625c093c7291d2045453f712435e906e9d91d371105da96f97c4"
+  },
+  {
+    "file": "KRNvKR.rtbz",
+    "bytes": 287632,
+    "url": "https://tablebase.lichess.ovh/tables/standard/3-4-5-dtz/KRNvKR.rtbz",
+    "sha256": "4183e43f92e4ea0126028acc59b991b36dabdf944d53a61e9e7367374aebbe06"
+  }
+]
