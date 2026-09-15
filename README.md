@@ -108,5 +108,4 @@ agent API and clock, but its legacy 300-ply material adjudication currently diff
 
 ## The rules
 
-[aichessathon.com/docs](https://aichessathon.com/docs) is canonical and changes. Read it before
-you upload.
+[aichessathon.com/docs](https://aichessathon.com/docs) is the canonical source regarding the rules.
